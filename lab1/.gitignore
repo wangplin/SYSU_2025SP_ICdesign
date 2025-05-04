@@ -1,0 +1,13 @@
+logFile
+nohup.out
+*.png
+*.txt
+
+*.ic0
+*.mt0
+*.pa0
+*.st0
+*.su0
+*.tr0
+*.log
+*.log.*

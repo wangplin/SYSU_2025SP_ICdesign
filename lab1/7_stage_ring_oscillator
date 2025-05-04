@@ -1,0 +1,82 @@
+.title 7_stage_ring_oscillator
+
+* 变量
+* 计算哪个上升/下降沿
+.PARAM RISE_FALL = 10
+
+* PMOS/NMOS 宽长比
+.PARAM nl = 40e-9
+.PARAM nw = 120e-9
+.PARAM pl = 40e-9
+.PARAM pw = 120e-9
+
+* 仿真温度
+.PARAM temp = 25
+
+* 电容/电阻
+.PARAM res = 0
+.PARAM cap = 0
+
+* 初始化激励
+.PARAM init_lin = 1.1
+
+
+* 瞬时初始化
+.IC
++    V(lin)=init_lin
+
+* 仿真1ns
+.TRAN 1e-9 5e-9 START=0.0
+
+* 测量 Tphl 和 Tplh
+.MEASURE TRAN Tphl TRIG V(lin) VAL=0.55 RISE=RISE_FALL 
++   TARG V(lout) VAL=0.55 FALL=RISE_FALL
+
+.MEASURE TRAN Tplh TRIG V(lin) VAL=0.55 FALL=RISE_FALL 
++   TARG V(lout) VAL=0.55 RISE=RISE_FALL
+
+* 测量振荡周期  T
+.MEASURE TRAN T TRIG V(lout) VAL=0.55 RISE=RISE_FALL
++   TARG V(lout) VAL=0.55 RISE=RISE_FALL+1
+
+* 上升时间
+.MEASURE TRAN Tr TRIG V(lin) VAL=0.11 RISE=RISE_FALL
++   TARG V(lin) VAL=0.99 RISE=RISE_FALL
+
+* 下降时间
+.MEASURE TRAN Tf TRIG V(lin) VAL=0.99 FALL=RISE_FALL
++   TARG V(lin) VAL=0.11 FALL=RISE_FALL
+
+* 仿真温度
+.TEMP temp
+
+.OPTION
++    ARTIST=2
++    INGOLD=2
++    PARHIER=LOCAL
++    PSF=2
+.LIB "/home/apps/EDAs/libs/TSMC40LP_PDK/PDK/tn40cmsp001k3_2_0_2a/PDK/PDK/models/hspice/toplevel.l" top_tt
+
+** Library name: tsmcN40
+** Cell name: inv
+** View name: schematic
+.subckt inv g gb in out p pb
+m0 out in g gb nch l=nl w='nw*nf' m=1 nf=nf sd=nsd ad='((nf-int(nf/2)*2)*((110e-9+((nf-1)*140e-9)/2)+0)+((nf+1)-int((nf+1)/2)*2)*((nf/2)*140e-9))*nw' as='((nf-int(nf/2)*2)*((110e-9+((nf-1)*140e-9)/2)+0)+((nf+1)-int((nf+1)/2)*2)*(((220e-9+(nf/2-1)*140e-9)+0)+0))*nw' pd='(nf-int(nf/2)*2)*(((110e-9+((nf-1)*140e-9)/2)+0)*2+(nf+1)*nw)+((nf+1)-int((nf+1)/2)*2)*(((nf/2)*140e-9)*2+nf*nw)' ps='(nf-int(nf/2)*2)*(((110e-9+((nf-1)*140e-9)/2)+0)*2+(nf+1)*nw)+((nf+1)-int((nf+1)/2)*2)*((((220e-9+(nf/2-1)*140e-9)+0)+0)*2+(nf+2)*nw)' nrd='(nf-int(nf/2)*2)*((4.9e-15/(70e-9+70e-9*(nf-1)))/nw)+((nf+1)-int((nf+1)/2)*2)*((70e-9/nf)/nw)' nrs='(nf-int(nf/2)*2)*((4.9e-15/(70e-9+70e-9*(nf-1)))/nw)+((nf+1)-int((nf+1)/2)*2)*((343e-24/(4.9e-15*(nf-2)+9.8e-15))/nw)' sa=nsa sb=nsb
+m1 out in p pb pch l=pl w='pw*pf' m=1 nf=pf sd=psd ad='((pf-int(pf/2)*2)*((110e-9+((pf-1)*140e-9)/2)+0)+((pf+1)-int((pf+1)/2)*2)*((pf/2)*140e-9))*pw' as='((pf-int(pf/2)*2)*((110e-9+((pf-1)*140e-9)/2)+0)+((pf+1)-int((pf+1)/2)*2)*(((220e-9+(pf/2-1)*140e-9)+0)+0))*pw' pd='(pf-int(pf/2)*2)*(((110e-9+((pf-1)*140e-9)/2)+0)*2+(pf+1)*pw)+((pf+1)-int((pf+1)/2)*2)*(((pf/2)*140e-9)*2+pf*pw)' ps='(pf-int(pf/2)*2)*(((110e-9+((pf-1)*140e-9)/2)+0)*2+(pf+1)*pw)+((pf+1)-int((pf+1)/2)*2)*((((220e-9+(pf/2-1)*140e-9)+0)+0)*2+(pf+2)*pw)' nrd='(pf-int(pf/2)*2)*((4.9e-15/(70e-9+70e-9*(pf-1)))/pw)+((pf+1)-int((pf+1)/2)*2)*((70e-9/pf)/pw)' nrs='(pf-int(pf/2)*2)*((4.9e-15/(70e-9+70e-9*(pf-1)))/pw)+((pf+1)-int((pf+1)/2)*2)*((343e-24/(4.9e-15*(pf-2)+9.8e-15))/pw)' sa=psa sb=psb
+.ends inv
+** End of subcircuit definition.
+
+* 7 stage ring oscillator
+xi0 gnd gnd lin lout vdd vdd inv m=1 nl=nl nw=nw nf=1 nsd=140e-9 nsa=110e-9 nsb=110e-9 pl=pl pw=pw pf=1 psd=140e-9 psa=110e-9 psb=110e-9
+xi1 gnd gnd lout net023 vdd vdd inv m=1 nl=nl nw=nw nf=1 nsd=140e-9 nsa=110e-9 nsb=110e-9 pl=pl pw=pw pf=1 psd=140e-9 psa=110e-9 psb=110e-9
+xi2 gnd gnd net041 net022 vdd vdd inv m=1 nl=nl nw=nw nf=1 nsd=140e-9 nsa=110e-9 nsb=110e-9 pl=pl pw=pw pf=1 psd=140e-9 psa=110e-9 psb=110e-9
+xi3 gnd gnd net022 net021 vdd vdd inv m=1 nl=nl nw=nw nf=1 nsd=140e-9 nsa=110e-9 nsb=110e-9 pl=pl pw=pw pf=1 psd=140e-9 psa=110e-9 psb=110e-9
+xi4 gnd gnd net021 net020 vdd vdd inv m=1 nl=nl nw=nw nf=1 nsd=140e-9 nsa=110e-9 nsb=110e-9 pl=pl pw=pw pf=1 psd=140e-9 psa=110e-9 psb=110e-9
+xi5 gnd gnd net020 net019 vdd vdd inv m=1 nl=nl nw=nw nf=1 nsd=140e-9 nsa=110e-9 nsb=110e-9 pl=pl pw=pw pf=1 psd=140e-9 psa=110e-9 psb=110e-9
+xi6 gnd gnd net019 lin vdd vdd inv m=1 nl=nl nw=nw nf=1 nsd=140e-9 nsa=110e-9 nsb=110e-9 pl=pl pw=pw pf=1 psd=140e-9 psa=110e-9 psb=110e-9
+
+v2 vdd gnd DC=1.1
+v1 gnd 0 DC=0
+r0 net023 net041 res
+c0 net041 gnd cap
+.END
