@@ -1,0 +1,180 @@
+.title sram_array
+
+.PARAM res = 0
+.PARAM cap = 0
+
+.PARAM p12w = 120n
+.PARAM a12w = 180n
+.PARAM n12w = 240n
+
+.ic V(Xcell_0_2.bl_in) = 0V
+
+.OPTIONS POST BRIEF
+.OP
+.LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+.GLOBAL gnd vdd_0
+
+
+* .MEASURE TRAN Read_ability MAX V(Xcell_0_2.bl_in) FROM=14.9n TO=15.1n
+* .MEASURE TRAN Write_ability MIN V(Xcell_0_2.bl_in) FROM=9.5n TO=10.5n
+
+.MEASURE TRAN Twrite TRIG V(wl_2) VAL=0.55 RISE=1
++   TARG V(Xcell_0_2.bl_in) VAL=0.55 RISE=1
+
+.MEASURE TRAN Tread TRIG V(wl_2) VAL=0.55 RISE=3
++   TARG V(bl_0) VAL=0.245 FALL=2
+
+v0 gnd 0 DC=0
+v1 vdd_0 gnd DC=1.1
+
+.subckt RC_line in out vss
+r0 in out res
+c0 out vss cap
+.ends RC_line
+
+.subckt inv vi vo
+XP vo vi vdd_0 vdd_0 p11ll_ckt w=330n l=40n $ PMOS
+XN vo vi gnd gnd n11ll_ckt w=280n l=40n $ NMOS
+.ends inv
+
+*       m0         m1
+*   m4                  m5       
+*       m2         m3
+.subckt sram_cell bl blb vddi vddsd vssi wl
+Xm0 vddsd blb_in bl_in vddi p11ll_ckt w=p12w l=40n
+Xm1 vddsd bl_in blb_in vddi p11ll_ckt w=p12w l=40n
+Xm2 bl_in blb_in vssi vssi n11ll_ckt w=n12w l=40n
+Xm3 blb_in bl_in vssi vssi n11ll_ckt w=n12w l=40n
+Xm4 bl wl bl_in vssi n11ll_ckt w=a12w l=40n
+Xm5 blb wl blb_in vssi n11ll_ckt w=a12w l=40n
+.ends sram_cell
+
+
+.subckt write_driver vdd vss din wre bl blb
+xi0 din net0 inv
+xi1 wre net1 inv 
+Xm6 vdd net0 net2 vdd p11ll_ckt w=330n l=40n
+Xm7 vdd din net3 vdd p11ll_ckt w=330n l=40n
+Xm8 net2 net1 bl vdd p11ll_ckt w=330n l=40n
+Xm9 net3 net1 blb vdd p11ll_ckt w=330n l=40n
+Xm10 bl wre net4 vss n11ll_ckt w=280n l=40n
+Xm11 blb wre net5 vss n11ll_ckt w=280n l=40n
+Xm12 net4 net0 vss vss n11ll_ckt w=280n l=40n
+Xm13 net5 din vss vss n11ll_ckt w=280n l=40n
+.ends write_driver
+
+.subckt precharge_circuit bl blb vdd precharge
+Xm14 blb precharge bl vdd p11ll_ckt w=330n l=40n
+Xm15 blb precharge bl vdd p11ll_ckt w=330n l=40n
+Xm16 blb precharge bl vdd p11ll_ckt w=330n l=40n
+.ends precharge_circuit
+
+* Sram Array
+Xcell_0_0 bl_0 blb_0 vdd_6 vdd_6 gnd wl_0 sram_cell
+Xcell_0_1 bl_0 blb_0 vdd_4 vdd_4 gnd wl_1 sram_cell
+Xcell_0_2 bl_0 blb_0 vdd_4 vdd_4 gnd wl_2 sram_cell
+Xcell_0_3 bl_0 blb_0 vdd_6 vdd_6 gnd wl_3 sram_cell
+Xcell_1_0 bl_1 blb_1 vdd_4 vdd_4 gnd wl_0 sram_cell
+Xcell_1_1 bl_1 blb_1 vdd_2 vdd_2 gnd wl_1 sram_cell
+Xcell_1_2 bl_1 blb_1 vdd_2 vdd_2 gnd wl_2 sram_cell
+Xcell_1_3 bl_1 blb_1 vdd_4 vdd_4 gnd wl_3 sram_cell
+Xcell_2_0 bl_2 blb_2 vdd_4 vdd_4 gnd wl_0 sram_cell
+Xcell_2_1 bl_2 blb_2 vdd_2 vdd_2 gnd wl_1 sram_cell
+Xcell_2_2 bl_2 blb_2 vdd_2 vdd_2 gnd wl_2 sram_cell
+Xcell_2_3 bl_2 blb_2 vdd_4 vdd_4 gnd wl_3 sram_cell
+Xcell_3_0 bl_3 blb_3 vdd_6 vdd_6 gnd wl_0 sram_cell
+Xcell_3_1 bl_3 blb_3 vdd_4 vdd_4 gnd wl_1 sram_cell
+Xcell_3_2 bl_3 blb_3 vdd_4 vdd_4 gnd wl_2 sram_cell
+Xcell_3_3 bl_3 blb_3 vdd_6 vdd_6 gnd wl_3 sram_cell
+
+* Vdd Network
+Xl1 vdd_0 vdd_1 gnd RC_line
+Xl2 vdd_1 vdd_2 gnd RC_line
+Xl3 vdd_2 vdd_3 gnd RC_line
+Xl4 vdd_3 vdd_4 gnd RC_line
+Xl5 vdd_4 vdd_5 gnd RC_line
+Xl6 vdd_5 vdd_6 gnd RC_line
+
+* Write Driver
+Xwrite_driver_0_0 vdd_6 gnd din_0 wre bl_0 blb_0 write_driver
+Xwrite_driver_0_1 vdd_6 gnd din_0 wre bl_0 blb_0 write_driver
+Xwrite_driver_0_2 vdd_6 gnd din_0 wre bl_0 blb_0 write_driver
+Xwrite_driver_0_3 vdd_6 gnd din_0 wre bl_0 blb_0 write_driver
+Xwrite_driver_1_0 vdd_6 gnd din_1 wre bl_1 blb_1 write_driver
+Xwrite_driver_1_1 vdd_6 gnd din_1 wre bl_1 blb_1 write_driver
+Xwrite_driver_1_2 vdd_6 gnd din_1 wre bl_1 blb_1 write_driver
+Xwrite_driver_1_3 vdd_6 gnd din_1 wre bl_1 blb_1 write_driver
+Xwrite_driver_2_0 vdd_6 gnd din_2 wre bl_2 blb_2 write_driver
+Xwrite_driver_2_1 vdd_6 gnd din_2 wre bl_2 blb_2 write_driver
+Xwrite_driver_2_2 vdd_6 gnd din_2 wre bl_2 blb_2 write_driver
+Xwrite_driver_2_3 vdd_6 gnd din_2 wre bl_2 blb_2 write_driver
+Xwrite_driver_3_0 vdd_6 gnd din_3 wre bl_3 blb_3 write_driver
+Xwrite_driver_3_1 vdd_6 gnd din_3 wre bl_3 blb_3 write_driver
+Xwrite_driver_3_2 vdd_6 gnd din_3 wre bl_3 blb_3 write_driver
+Xwrite_driver_3_3 vdd_6 gnd din_3 wre bl_3 blb_3 write_driver
+
+* Precharge Circuit
+Xprecharge_0 bl_0 blb_0 vdd_6 precharge precharge_circuit
+Xprecharge_1 bl_1 blb_1 vdd_6 precharge precharge_circuit
+Xprecharge_2 bl_2 blb_2 vdd_6 precharge precharge_circuit
+Xprecharge_3 bl_3 blb_3 vdd_6 precharge precharge_circuit
+
+
+
+
+
+.TRAN 1e-9 20e-9 START=0.0
+
+* 5n 向 WL2 写入 1101
+* Vwre wre 0 pwl (0n 0 4.99n 0 5n 1.1)
+
+* Vwl_0 wl_0 0 pwl (0n 0)
+* Vwl_1 wl_1 0 pwl (0n 0)
+* Vwl_2 wl_2 0 pwl (0n 0 4.99n 0 5n 1.1)
+* Vwl_3 wl_3 0 pwl (0n 0)
+
+* Vdin_0 din_0 0 pwl (0n 0 4.99n 0 5n 1.1)
+* Vdin_1 din_1 0 pwl (0n 0 4.99n 0 5n 1.1)
+* Vdin_2 din_2 0 pwl (0n 0)
+* Vdin_3 din_3 0 pwl (0n 0 4.99n 0 5n 1.1)
+
+* Vprecharge precharge 1.1 pwl (0n 1.1)
+
+
+* 5n 向 WL2 写入 1101
+* 10n 向 WL2 写入 0011
+* Vwre wre 0 pwl (0n 0 4.99n 0 5n 1.1 6n 1.1 6.01n 0 9.99n 0 10n 1.1 11n 1.1 11.01n 0) 
+
+* Vwl_0 wl_0 0 pwl (0n 0)
+* Vwl_1 wl_1 0 pwl (0n 0)
+* Vwl_2 wl_2 0 pwl (0n 0 4.99n 0 5n 1.1 6n 1.1 6.01n 0 9.99n 0 10n 1.1 11n 1.1 11.01n 0)
+* Vwl_3 wl_3 0 pwl (0n 0)
+
+* Vdin_0 din_0 0 pwl (0n 0 4.99n 0 5n 1.1 9.99n 1.1 10n 0)
+* Vdin_1 din_1 0 pwl (0n 0 4.99n 0 5n 1.1 9.99n 1.1 10n 0)
+* Vdin_2 din_2 0 pwl (0n 0 9.99n 0 10n 1.1)
+* Vdin_3 din_3 0 pwl (0n 0 4.99n 0 5n 1.1 )
+
+* Vprecharge precharge 1.1 pwl (0n 1.1)
+
+* 5n 向 WL2 写入 1101
+* 10n 向 WL2 写入 0011
+* 15n 读取 WL2 的值，应为 0011
+Vwre wre 0 pwl (0n 0 4.99n 0 5n 1.1 6n 1.1 6.01n 0 9.99n 0 10n 1.1 11n 1.1 11.01n 0) 
+
+Vwl_0 wl_0 0 pwl (0n 0)
+Vwl_1 wl_1 0 pwl (0n 0)
+Vwl_2 wl_2 0 pwl (0n 0 4.99n 0 5n 1.1 6n 1.1 6.01n 0 9.99n 0 10n 1.1 11n 1.1 11.01n 0 14.99n 0 15n 1.1 16n 1.1 16.01n 0)
+Vwl_3 wl_3 0 pwl (0n 0)
+
+Vdin_0 din_0 0 pwl (0n 0 4.99n 0 5n 1.1 9.99n 1.1 10n 0)
+Vdin_1 din_1 0 pwl (0n 0 4.99n 0 5n 1.1 9.99n 1.1 10n 0)
+Vdin_2 din_2 0 pwl (0n 0 9.99n 0 10n 1.1)
+Vdin_3 din_3 0 pwl (0n 0 4.99n 0 5n 1.1 )
+
+Vprecharge precharge 0 pwl (0n 1.1 13.99n 1.1 14n 0 15n 0 15.01n 1.1)
+
+
+
+.END
