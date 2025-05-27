@@ -1,0 +1,19 @@
+.IC v(Y_0)=0 v(Y_1)=0 v(Y_2)=0 v(Y_3)=0 v(Y_4)=0 v(Y_5)=0 v(Y_6)=0 v(Y_7)=0
+VA_0 A_0 0 pwl (0n 0 0.01n 0)
+VB_0 B_0 0 pwl (0n 0 0.01n 0)
+VA_1 A_1 0 pwl (0n 0 0.01n 1)
+VB_1 B_1 0 pwl (0n 0 0.01n 1)
+VA_2 A_2 0 pwl (0n 0 0.01n 0)
+VB_2 B_2 0 pwl (0n 0 0.01n 0)
+VA_3 A_3 0 pwl (0n 0 0.01n 0)
+VB_3 B_3 0 pwl (0n 0 0.01n 0)
+VA_4 A_4 0 pwl (0n 0 0.01n 1)
+VB_4 B_4 0 pwl (0n 0 0.01n 0)
+VA_5 A_5 0 pwl (0n 0 0.01n 1)
+VB_5 B_5 0 pwl (0n 0 0.01n 0)
+VA_6 A_6 0 pwl (0n 0 0.01n 1)
+VB_6 B_6 0 pwl (0n 0 0.01n 0)
+VA_7 A_7 0 pwl (0n 0 0.01n 1)
+VB_7 B_7 0 pwl (0n 0 0.01n 0)
+.include 'and'  # 包含之前生成的子电路
+.END

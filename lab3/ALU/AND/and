@@ -1,0 +1,102 @@
+.title 8bit_AND
+
+
+.OPTIONS POST BRIEF
+.OP
+.LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+.GLOBAL vss vdd
+
+v0 vss 0 DC=0
+v1 vdd vss DC=1.1
+
+.subckt inv vi vo vdd vss
+XP vo vi vdd vdd p11ll_ckt w=330n l=40n $ PMOS
+XN vo vi vss vss n11ll_ckt w=280n l=40n $ NMOS
+.ends inv
+
+.subckt trans_resister vin vout sel sel_bar vdd vss
+XN vin sel vout vss n11ll_ckt w=280n l=40n $ NMOS
+XP vin sel_bar vout vdd p11ll_ckt w=330n l=40n $ PMOS
+.ends trans_resister
+
+* F_bar = A * S + B * S_bar
+.subckt mux2_1 A B S F_bar vdd vss
+Xtrans_resister_0 A F_bar S S_bar vdd vss trans_resister
+Xtrans_resister_1 B F_bar S_bar S vdd vss trans_resister
+Xinv_0 S S_bar vdd vss inv
+* Minv_1 F_bar F vdd vss inv
+.ends mux2_1
+
+
+
+
+.TRAN 1e-9 20e-9 START=0.0
+
+
+
+
+
+* test case for mux2_1
+* Xmux2_1 A B S F_bar vdd vss mux2_1
+* VA A 0 pwl(0n 0 9.99n 0 10n 1 19.99n 1 20n 0 29.99n 0 30n 1)
+* VB B 0 pwl(0n 0 4.99n 0 5n 1 9.99n 1 10n 0 14.99n 0 15n 1 19.99n 1
+*             20n 0 24.99n 0 25n 1 29.99n 1 30n 0 34.99n 0 35n 1) 
+* VS S 0 pwl(0n 0 19.9n 0 20n 1)
+
+
+
+.subckt AND_OR_GATE A B Y P0 P1 P2 P3 vdd vss
+
+Xmux2_1_0 P1 P0 B Y_1 vdd vss mux2_1
+Xmux2_1_1 p3 p2 B Y_2 vdd vss mux2_1
+Xmux2_1_2 Y_2 Y_1 A Y vdd vss mux2_1
+.ends
+
+
+
+
+
+
+* test case for AND_OR_GATE
+
+* * AND MODE
+* XAND_OR_GATE_0 A B Y_and vss vss vss vdd vdd vss AND_OR_GATE
+* * OR MODE
+* XAND_OR_GATE_1 A B Y_or vss vdd vdd vdd vdd vss AND_OR_GATE
+
+* .MEASURE TRAN and_up MAX V(Y_and) FROM=9.99n TO=10.05n
+* .MEASURE TRAN or_down MIN V(Y_or) FROM=9.99n TO=10.05n
+
+* VA A 0 pwl(0n 0 9.99n 0 10n 1 )
+* VB B 0 pwl(0n 0 4.99n 0 5n 1 9.99n 1 10n 0 14.99n 0 15n 1) 
+
+
+.subckt ALU_ADD A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 Y_0 Y_1 Y_2 Y_3 Y_4 Y_5 Y_6 Y_7 vdd vss
+XAND_OR_GATE_0 A_0 B_0 Y_0 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_1 A_1 B_1 Y_1 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_2 A_2 B_2 Y_2 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_3 A_3 B_3 Y_3 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_4 A_4 B_4 Y_4 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_5 A_5 B_5 Y_5 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_6 A_6 B_6 Y_6 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_7 A_7 B_7 Y_7 vss vss vss vdd vdd vss AND_OR_GATE
+.ends ALU_ADD
+
+
+XALU_ADD_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 Y_0 Y_1 Y_2 Y_3 Y_4 Y_5 Y_6 Y_7 vdd vss ALU_ADD
+
+.MEASURE TRAN Y_0 MAX V(Y_0) FROM=3n TO=4n
+.MEASURE TRAN Y_1 MAX V(Y_1) FROM=3n TO=4n
+.MEASURE TRAN Y_2 MAX V(Y_2) FROM=3n TO=4n
+.MEASURE TRAN Y_3 MAX V(Y_3) FROM=3n TO=4n
+.MEASURE TRAN Y_4 MAX V(Y_4) FROM=3n TO=4n
+.MEASURE TRAN Y_5 MAX V(Y_5) FROM=3n TO=4n
+.MEASURE TRAN Y_6 MAX V(Y_6) FROM=3n TO=4n
+.MEASURE TRAN Y_7 MAX V(Y_7) FROM=3n TO=4n
+
+.END
+
+
+
+

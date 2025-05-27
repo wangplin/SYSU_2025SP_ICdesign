@@ -1,0 +1,10 @@
+.subckt ALU_ADD A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 Y_0 Y_1 Y_2 Y_3 Y_4 Y_5 Y_6 Y_7 vdd vss
+XAND_OR_GATE_0 A_0 B_0 Y_0 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_1 A_1 B_1 Y_1 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_2 A_2 B_2 Y_2 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_3 A_3 B_3 Y_3 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_4 A_4 B_4 Y_4 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_5 A_5 B_5 Y_5 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_6 A_6 B_6 Y_6 vss vss vss vdd vdd vss AND_OR_GATE
+XAND_OR_GATE_7 A_7 B_7 Y_7 vss vss vss vdd vdd vss AND_OR_GATE
+.ends ALU_ADD
