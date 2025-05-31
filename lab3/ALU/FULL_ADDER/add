@@ -1,0 +1,299 @@
+.title 8bit_ADD
+
+
+.OPTIONS POST BRIEF
+.OP
+.LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+.GLOBAL vss vdd
+
+v0 vss 0 DC=0
+v1 vdd vss DC=1.1
+
+.subckt inv vi vo vdd vss
+XP vo vi vdd vdd p11ll_ckt w=180n l=40n $ PMOS
+XN vo vi vss vss n11ll_ckt w=120n l=40n $ NMOS
+.ends inv
+
+.subckt trans_resister vin vout sel sel_bar vdd vss
+XN vin sel vout vss n11ll_ckt w=120n l=40n $ NMOS
+XP vin sel_bar vout vdd p11ll_ckt w=180n l=40n $ PMOS
+.ends trans_resister
+
+
+* P = A xor B
+.subckt Propagate A B P vdd vss
+XP0 B A P vdd p11ll_ckt w=180n l=40n $ PMOS
+XN0 P A B_bar vss n11ll_ckt w=120n l=40n $ NMOS
+Xtrans_resister_0 A P B_bar B vdd vss trans_resister
+Xinv_0 B B_bar vdd vss inv
+.ends Propagate
+
+
+* G = A and B
+.subckt Generate A B G vdd vss
+XP_0 vdd A G_bar vdd p11ll_ckt w=180n l=40n $ PMOS
+XP_1 vdd B G_bar vdd p11ll_ckt w=180n l=40n $ PMOS
+XN_0 G_bar A net vss n11ll_ckt w=120n l=40n $ NMOS
+XN_1 net B vss vss n11ll_ckt w=120n l=40n $ NMOS
+Xinv_0 G_bar G vdd vss inv
+.ends
+
+.subckt OR A B O vdd vss
+XP0 vdd A net vdd p11ll_ckt w=180n l=40n $ PMOS
+XP1 net B O_bar vdd p11ll_ckt w=180n l=40n $ PMOS
+XN0 O_bar A vss vss n11ll_ckt w=120n l=40n $ NMOS 
+XN1 O_bar B vss vss n11ll_ckt w=120n l=40n $ NMOS
+Xinv_0 O_bar O vdd vss inv
+.ends
+
+
+* Cout = G + P * Cin
+.subckt Cout P G Cin Cout vdd vss
+XGenerate_0 P Cin P_Cin vdd vss Generate
+XOR_0 G P_Cin Cout vdd vss OR
+.ends
+
+.subckt Sout P Cin Sout vdd vss
+XPropagate_0 P Cin Sout vdd vss Propagate
+.ends
+
+
+.subckt full_adder P G Cin Cout Sout vdd vss
+XCout_0 P G Cin Cout vdd vss Cout
+XSout_0 P Cin Sout vdd vss Sout
+.ends
+
+
+* (G_1, P_1) . (G_0, P_0) = (G_1 + P_1 * G_0, P_1 * P_0) = (G_1_0, P_1_0)
+.subckt dot_product G_1 P_1 G_0 P_0 G_1_0 P_1_0 vdd vss
+Xdot_product_Cout P_1 G_1 G_0 G_1_0 vdd vss Cout
+Xdot_product_AND P_1 P_0 P_1_0 vdd vss Generate
+.ends
+
+
+.subckt ripple_carry_adder A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 S_0 S_1 S_2 S_3 S_4 S_5 S_6 S_7 Cin Cout vdd vss
+
+XPropagate_0 A_0 B_0 P_0 vdd vss Propagate
+XGenerate_0 A_0 B_0 G_0 vdd vss Generate
+Xfull_adder_0 P_0 G_0 Cin Cout_0 S_0 vdd vss full_adder
+
+XPropagate_1 A_1 B_1 P_1 vdd vss Propagate
+XGenerate_1 A_1 B_1 G_1 vdd vss Generate
+Xfull_adder_1 P_1 G_1 Cout_0 Cout_1 S_1 vdd vss full_adder
+
+XPropagate_2 A_2 B_2 P_2 vdd vss Propagate
+XGenerate_2 A_2 B_2 G_2 vdd vss Generate
+Xfull_adder_2 P_2 G_2 Cout_1 Cout_2 S_2 vdd vss full_adder
+
+XPropagate_3 A_3 B_3 P_3 vdd vss Propagate
+XGenerate_3 A_3 B_3 G_3 vdd vss Generate
+Xfull_adder_3 P_3 G_3 Cout_2 Cout_3 S_3 vdd vss full_adder
+
+XPropagate_4 A_4 B_4 P_4 vdd vss Propagate
+XGenerate_4 A_4 B_4 G_4 vdd vss Generate
+Xfull_adder_4 P_4 G_4 Cout_3 Cout_4 S_4 vdd vss full_adder
+
+XPropagate_5 A_5 B_5 P_5 vdd vss Propagate
+XGenerate_5 A_5 B_5 G_5 vdd vss Generate
+Xfull_adder_5 P_5 G_5 Cout_4 Cout_5 S_5 vdd vss full_adder
+
+XPropagate_6 A_6 B_6 P_6 vdd vss Propagate
+XGenerate_6 A_6 B_6 G_6 vdd vss Generate
+Xfull_adder_6 P_6 G_6 Cout_5 Cout_6 S_6 vdd vss full_adder
+
+XPropagate_7 A_7 B_7 P_7 vdd vss Propagate
+XGenerate_7 A_7 B_7 G_7 vdd vss Generate
+Xfull_adder_7 P_7 G_7 Cout_6 Cout S_7 vdd vss full_adder
+
+.ends
+
+
+.subckt carry_lookahead_adder A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 S_0 S_1 S_2 S_3 S_4 S_5 S_6 S_7 Cin Cout vdd vss
+
+XPropagate_0 A_0 B_0 P_0 vdd vss Propagate
+XGenerate_0 A_0 B_0 G_0 vdd vss Generate
+
+XPropagate_1 A_1 B_1 P_1 vdd vss Propagate
+XGenerate_1 A_1 B_1 G_1 vdd vss Generate
+
+XPropagate_2 A_2 B_2 P_2 vdd vss Propagate
+XGenerate_2 A_2 B_2 G_2 vdd vss Generate
+
+XPropagate_3 A_3 B_3 P_3 vdd vss Propagate
+XGenerate_3 A_3 B_3 G_3 vdd vss Generate
+
+XPropagate_4 A_4 B_4 P_4 vdd vss Propagate
+XGenerate_4 A_4 B_4 G_4 vdd vss Generate
+
+XPropagate_5 A_5 B_5 P_5 vdd vss Propagate
+XGenerate_5 A_5 B_5 G_5 vdd vss Generate
+
+XPropagate_6 A_6 B_6 P_6 vdd vss Propagate
+XGenerate_6 A_6 B_6 G_6 vdd vss Generate
+
+XPropagate_7 A_7 B_7 P_7 vdd vss Propagate
+XGenerate_7 A_7 B_7 G_7 vdd vss Generate
+
+Xdot_product_1_0 G_1 P_1 G_0 P_0 G_1_0 P_1_0 vdd vss dot_product
+Xdot_product_3_2 G_3 P_3 G_2 P_2 G_3_2 P_3_2 vdd vss dot_product
+Xdot_product_5_4 G_5 P_5 G_4 P_4 G_5_4 P_5_4 vdd vss dot_product
+Xdot_product_7_6 G_7 P_7 G_6 P_6 G_7_6 P_7_6 vdd vss dot_product
+
+Xdot_product_3_0 G_3_2 P_3_2 G_1_0 P_1_0 G_3_0 P_3_0 vdd vss dot_product
+Xdot_product_7_4 G_7_6 P_7_6 G_5_4 P_5_4 G_7_4 P_7_4 vdd vss dot_product
+
+Xdot_product_7_0 G_7_4 P_7_4 G_3_0 P_3_0 G_7_0 P_7_0 vdd vss dot_product
+
+Xdot_product_5_0 G_5_4 P_5_4 G_3_0 P_3_0 G_5_0 P_5_0 vdd vss dot_product
+
+Xdot_product_2_0 G_2 P_2 G_1_0 P_1_0 G_2_0 P_2_0 vdd vss dot_product
+Xdot_product_4_0 G_4 P_4 G_3_0 P_3_0 G_4_0 P_4_0 vdd vss dot_product
+Xdot_product_6_0 G_6 P_6 G_5_0 P_5_0 G_6_0 P_6_0 vdd vss dot_product
+
+XCout_0 G_0 P_0         Cin vss Cout_0 vss vdd vss dot_product
+XCout_1 G_1_0 P_1_0 Cin vss Cout_1 vss vdd vss dot_product
+XCout_2 G_2_0 P_2_0 Cin vss Cout_2 vss vdd vss dot_product
+XCout_3 G_3_0 P_3_0 Cin vss Cout_3 vss vdd vss dot_product
+XCout_4 G_4_0 P_4_0 Cin vss Cout_4 vss vdd vss dot_product
+XCout_5 G_5_0 P_5_0 Cin vss Cout_5 vss vdd vss dot_product
+XCout_6 G_6_0 P_6_0 Cin vss Cout_6 vss vdd vss dot_product
+XCout_7 G_7_0 P_7_0 Cin vss Cout vss vdd vss dot_product
+
+
+XSout_0 P_0 Cin S_0 vdd vss Sout
+XSout_1 P_1 Cout_0 S_1 vdd vss Sout
+XSout_2 P_2 Cout_1 S_2 vdd vss Sout
+XSout_3 P_3 Cout_2 S_3 vdd vss Sout
+XSout_4 P_4 Cout_3 S_4 vdd vss Sout
+XSout_5 P_5 Cout_4 S_5 vdd vss Sout
+XSout_6 P_6 Cout_5 S_6 vdd vss Sout
+XSout_7 P_7 Cout_6 S_7 vdd vss Sout
+
+.ends
+
+
+
+
+
+
+
+.TRAN 1e-9 40e-9 START=0.0
+
+* VA A 0 pwl(0n 0 9.99n 0 10n 1.1 19.99n 1.1 20n 0 29.99n 0 30n 1.1)
+* VB B 0 pwl(0n 0 4.99n 0 5n 1.1 9.99n 1.1 10n 0 14.99n 0 15n 1.1 19.99n 1.1)
+
+* Test case for XOR gate
+* XPropagate A B P vdd vss Propagate
+* .IC V(P)=0
+
+
+* Test case for AND gate
+* XGenerate_0 A B G vdd vss Generate
+* .IC V(G)=0
+
+* Test case for OR gate
+* XOR_0 A B O vdd vss OR
+* .IC V(O)=0
+
+
+* Test case for full adder
+
+* XPropagate_0 A B P vdd vss Propagate
+* XGenerate_0 A B G vdd vss Generate
+* Xfull_adder_0 P G Cin Cout Sout vdd vss full_adder
+
+* .IC V(Cout)=0 V(Sout)=0
+
+* VB B 0 pwl(0n 0 9.99n 0 10n 1.1 19.99n 1.1 20n 0 29.99n 0 30n 1.1)
+* VCin Cin 0 pwl(0n 0 4.99n 0 5n 1.1 9.99n 1.1 10n 0 14.99n 0 15n 1.1 19.99n 1.1 20n 0 24.99n 0 25n 1.1 29.99n 1.1 30n 0 34.99n 0 35n 1.1) 
+* VA A 0 pwl(0n 0 19.9n 0 20n 1.1)
+
+
+* Test case for ripple carry adder
+Xripple_carry_adder_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 S_0 S_1 S_2 S_3 S_4 S_5 S_6 S_7 Cin Cout vdd vss ripple_carry_adder
+
+* .IC V(Cout)=0 V(S_0)=0 V(S_1)=0 V(S_2)=0 V(S_3)=0 V(S_4)=0 V(S_5)=0 V(S_6)=0 V(S_7)=0
+
+* VA_0 A_0 0 pwl(0n 0 0.01n 1.1)
+* VA_1 A_1 0 pwl(0n 0 )
+* VA_2 A_2 0 pwl(0n 0 0.01n 1.1)
+* VA_3 A_3 0 pwl(0n 0 )
+* VA_4 A_4 0 pwl(0n 0 0.01n 1.1)
+* VA_5 A_5 0 pwl(0n 0 )
+* VA_6 A_6 0 pwl(0n 0 0.01n 1.1)
+* VA_7 A_7 0 pwl(0n 0 )
+
+* VB_0 B_0 0 pwl(0n 0 )
+* VB_1 B_1 0 pwl(0n 0 0.01n 1.1)
+* VB_2 B_2 0 pwl(0n 0 )
+* VB_3 B_3 0 pwl(0n 0 0.01n 1.1)
+* VB_4 B_4 0 pwl(0n 0 )
+* VB_5 B_5 0 pwl(0n 0 0.01n 1.1)
+* VB_6 B_6 0 pwl(0n 0 )
+* VB_7 B_7 0 pwl(0n 0 0.01n 1.1)
+
+* VCin Cin 0 pwl(0n 0 4.99n 0 5n 1.1 9.99n 1.1 10n 0)
+
+* .MEASURE TRAN rise TRIG V(Cin) VAL=0.55 RISE=1
+* +  TARG V(Cout) VAL=0.55 RISE=2
+
+* .MEASURE TRAN fall TRIG V(Cin) VAL=0.55 FALL=1
+* +  TARG V(Cout) VAL=0.55 FALL=2
+
+* Test case for carry lookahead adder
+
+* Xcarry_lookahead_adder_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 S_0 S_1 S_2 S_3 S_4 S_5 S_6 S_7 Cin Cout vdd vss carry_lookahead_adder
+
+* .IC V(Cout)=0 V(S_0)=0 V(S_1)=0 V(S_2)=0 V(S_3)=0 V(S_4)=0 V(S_5)=0 V(S_6)=0 V(S_7)=0 
+
+* VA_0 A_0 0 pwl(0n 0 0.01n 1.1)
+* VA_1 A_1 0 pwl(0n 0 )
+* VA_2 A_2 0 pwl(0n 0 0.01n 1.1)
+* VA_3 A_3 0 pwl(0n 0 )
+* VA_4 A_4 0 pwl(0n 0 0.01n 1.1)
+* VA_5 A_5 0 pwl(0n 0 )
+* VA_6 A_6 0 pwl(0n 0 0.01n 1.1)
+* VA_7 A_7 0 pwl(0n 0 )
+
+* VB_0 B_0 0 pwl(0n 0 )
+* VB_1 B_1 0 pwl(0n 0 0.01n 1.1)
+* VB_2 B_2 0 pwl(0n 0 )
+* VB_3 B_3 0 pwl(0n 0 0.01n 1.1)
+* VB_4 B_4 0 pwl(0n 0 )
+* VB_5 B_5 0 pwl(0n 0 0.01n 1.1)
+* VB_6 B_6 0 pwl(0n 0 )
+* VB_7 B_7 0 pwl(0n 0 0.01n 1.1)
+
+* VCin Cin 0 pwl(0n 0 4.99n 0 5n 1.1 9.99n 1.1 10n 0)
+
+* .MEASURE TRAN rise TRIG V(Cin) VAL=0.55 RISE=1
+* +  TARG V(Cout) VAL=0.55 RISE=1
+
+* .MEASURE TRAN fall TRIG V(Cin) VAL=0.55 FALL=1
+* +  TARG V(Cout) VAL=0.55 FALL=1
+
+
+
+
+
+.MEASURE TRAN S_0 MAX V(S_0) FROM=3n TO=4n
+.MEASURE TRAN S_1 MAX V(S_1) FROM=3n TO=4n
+.MEASURE TRAN S_2 MAX V(S_2) FROM=3n TO=4n
+.MEASURE TRAN S_3 MAX V(S_3) FROM=3n TO=4n
+.MEASURE TRAN S_4 MAX V(S_4) FROM=3n TO=4n
+.MEASURE TRAN S_5 MAX V(S_5) FROM=3n TO=4n
+.MEASURE TRAN S_6 MAX V(S_6) FROM=3n TO=4n
+.MEASURE TRAN S_7 MAX V(S_7) FROM=3n TO=4n
+.MEASURE TRAN Cout MAX V(Cout) FROM=3n TO=4n
+
+
+
+
+
+
+
+.END
+
+
+
