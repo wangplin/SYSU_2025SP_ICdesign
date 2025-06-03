@@ -1,14 +1,14 @@
 .title 8bit_AND
 
 
-.OPTIONS POST BRIEF
+.OPTIONS POST BRIEF redefsub
 .OP
 .LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
 .TEMP 25
 .GLOBAL vss vdd
 
-v0 vss 0 DC=0
-v1 vdd vss DC=1.1
+* v0 vss 0 DC=0
+* v1 vdd vss DC=1.1
 
 .subckt inv vi vo vdd vss
 XP vo vi vdd vdd p11ll_ckt w=330n l=40n $ PMOS
@@ -72,7 +72,7 @@ Xmux2_1_2 Y_2 Y_1 A Y vdd vss mux2_1
 * VB B 0 pwl(0n 0 4.99n 0 5n 1 9.99n 1 10n 0 14.99n 0 15n 1) 
 
 
-.subckt ALU_ADD A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 Y_0 Y_1 Y_2 Y_3 Y_4 Y_5 Y_6 Y_7 vdd vss
+.subckt ALU_AND A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 Y_0 Y_1 Y_2 Y_3 Y_4 Y_5 Y_6 Y_7 vdd vss
 XAND_OR_GATE_0 A_0 B_0 Y_0 vss vss vss vdd vdd vss AND_OR_GATE
 XAND_OR_GATE_1 A_1 B_1 Y_1 vss vss vss vdd vdd vss AND_OR_GATE
 XAND_OR_GATE_2 A_2 B_2 Y_2 vss vss vss vdd vdd vss AND_OR_GATE
@@ -81,10 +81,10 @@ XAND_OR_GATE_4 A_4 B_4 Y_4 vss vss vss vdd vdd vss AND_OR_GATE
 XAND_OR_GATE_5 A_5 B_5 Y_5 vss vss vss vdd vdd vss AND_OR_GATE
 XAND_OR_GATE_6 A_6 B_6 Y_6 vss vss vss vdd vdd vss AND_OR_GATE
 XAND_OR_GATE_7 A_7 B_7 Y_7 vss vss vss vdd vdd vss AND_OR_GATE
-.ends ALU_ADD
+.ends ALU_AND
 
 
-XALU_ADD_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 Y_0 Y_1 Y_2 Y_3 Y_4 Y_5 Y_6 Y_7 vdd vss ALU_ADD
+* XALU_AND_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 Y_0 Y_1 Y_2 Y_3 Y_4 Y_5 Y_6 Y_7 vdd vss ALU_AND
 
 .MEASURE TRAN Y_0 MAX V(Y_0) FROM=3n TO=4n
 .MEASURE TRAN Y_1 MAX V(Y_1) FROM=3n TO=4n

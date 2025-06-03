@@ -1,10 +1,10 @@
-.OPTIONS POST BRIEF
+.OPTIONS POST BRIEF redefsub
 
 .OP
-.LIB "/home/htj/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
 .TEMP 25
 
-VDD vdd 0 DC 1.1
+* VDD vdd 0 DC 1.1
 
 .TRAN 0.002n 30n UIC
 

@@ -30,5 +30,14 @@ Xripple_carry_adder_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_
 ```
 
 
+## 8bit ALU 
+
+```
+.include 'alu' 
+
+XALU A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 F_0 F_1 F_2 S_0 S_1 S_2 S_3 S_4 S_5 S_6 S_7 Cout vdd vss alu
+```
+
+
 
 

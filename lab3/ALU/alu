@@ -1,0 +1,101 @@
+.title 8bit_ALU
+
+
+.OPTIONS POST BRIEF
+.OP
+.LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+.GLOBAL vss vdd
+
+v0 vss 0 DC=0
+v1 vdd vss DC=1.1
+
+
+.include 'AND/and'
+.include 'OR/or'
+.include 'FULL_ADDER/add'
+.include 'INV/INV'
+.include 'FOURMUX/FOURMUX'
+.include 'TWOMUX/TWOMUX'
+
+
+
+.subckt ALU A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 F_0 F_1 F_2 S_0 S_1 S_2 S_3 S_4 S_5 S_6 S_7 Cout vdd vss
+
+XINV B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 B_0_BAR B_1_BAR B_2_BAR B_3_BAR B_4_BAR B_5_BAR B_6_BAR B_7_BAR vdd vss alu_inv
+
+XALU_2mux1 F_2 B_0_BAR B_0 B_1_BAR B_1 B_2_BAR B_2 B_3_BAR B_3 B_4_BAR B_4 B_5_BAR B_5 B_6_BAR B_6 B_7_BAR B_7 vdd vss B_0_OUT B_1_OUT B_2_OUT B_3_OUT B_4_OUT B_5_OUT B_6_OUT B_7_OUT alu_2mux1
+
+XALU_AND_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0_OUT B_1_OUT B_2_OUT B_3_OUT B_4_OUT B_5_OUT B_6_OUT B_7_OUT S_AND_0 S_AND_1 S_AND_2 S_AND_3 S_AND_4 S_AND_5 S_AND_6 S_AND_7 vdd vss ALU_AND 
+
+
+XALU_OR_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0_OUT B_1_OUT B_2_OUT B_3_OUT B_4_OUT B_5_OUT B_6_OUT B_7_OUT S_OR_0 S_OR_1 S_OR_2 S_OR_3 S_OR_4 S_OR_5 S_OR_6 S_OR_7 vdd vss ALU_OR 
+
+Xcarry_lookahead_adder_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0_OUT B_1_OUT B_2_OUT B_3_OUT B_4_OUT B_5_OUT B_6_OUT B_7_OUT S_ADD_0 S_ADD_1 S_ADD_2 S_ADD_3 S_ADD_4 S_ADD_5 S_ADD_6 S_ADD_7 F_2 Cout vdd vss carry_lookahead_adder
+
+X4MUX1 F_0 F_1 B_0_OUT S_ADD_0 S_OR_0 S_AND_0 B_1_OUT S_ADD_1 S_OR_1 S_AND_1 B_2_OUT S_ADD_2 S_OR_2 S_AND_2 B_3_OUT S_ADD_3 S_OR_3 S_AND_3 B_4_OUT S_ADD_4 S_OR_4 S_AND_4 B_5_OUT S_ADD_5 S_OR_5 S_AND_5 B_6_OUT S_ADD_6 S_OR_6 S_AND_6 B_7_OUT S_ADD_7 S_OR_7 S_AND_7 S_0 S_1 S_2 S_3 S_4 S_5 S_6 S_7 vdd vss alu_4mux1
+
+.ends
+
+
+XALU A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 F_0 F_1 F_2 S_0 S_1 S_2 S_3 S_4 S_5 S_6 S_7 Cout vdd vss alu
+
+
+* Testbench
+
+.IC V(Cout)=0 V(S_0)=0 V(S_1)=0 V(S_2)=0 V(S_3)=0 V(S_4)=0 V(S_5)=0 V(S_6)=0 V(S_7)=0
+
+VA_0 A_0 0 pwl(0n 0 )
+VA_1 A_1 0 pwl(0n 0 )
+VA_2 A_2 0 pwl(0n 0 0.01n 1.1)
+VA_3 A_3 0 pwl(0n 0 )
+VA_4 A_4 0 pwl(0n 0 0.01n 1.1)
+VA_5 A_5 0 pwl(0n 0 )
+VA_6 A_6 0 pwl(0n 0 0.01n 1.1)
+VA_7 A_7 0 pwl(0n 0 )
+
+VB_0 B_0 0 pwl(0n 0 )
+VB_1 B_1 0 pwl(0n 0 0.01n 1.1)
+VB_2 B_2 0 pwl(0n 0 )
+VB_3 B_3 0 pwl(0n 0 0.01n 1.1)
+VB_4 B_4 0 pwl(0n 0 )
+VB_5 B_5 0 pwl(0n 0 0.01n 1.1)
+VB_6 B_6 0 pwl(0n 0 )
+VB_7 B_7 0 pwl(0n 0 0.01n 1.1)
+
+
+
+* F_0 = 1, F_1 = 1, F_2 = 1     INV
+
+VF_0 F_0 0 pwl(0n 0 0.01n 1.1)
+VF_1 F_1 0 pwl(0n 0 0.01n 1.1)
+VF_2 F_2 0 pwl(0n 0 0.01n 1.1)
+
+* F_0 = 0, F_1 = 0, F_2 = 0     AND
+
+* VF_0 F_0 0 pwl(0n 0 )
+* VF_1 F_1 0 pwl(0n 0 )
+* VF_2 F_2 0 pwl(0n 0 )
+
+
+* F_0 = 1, F_1 = 0, F_2 = 0     OR
+
+* VF_0 F_0 0 pwl(0n 0 0.01n 1.1)
+* VF_1 F_1 0 pwl(0n 0 )
+* VF_2 F_2 0 pwl(0n 0 )
+
+* F_0 = 0, F_1 = 1, F_2 = 0     ADD
+* VF_0 F_0 0 pwl(0n 0 )
+* VF_1 F_1 0 pwl(0n 0 0.01n 1.1)
+* VF_2 F_2 0 pwl(0n 0 )
+
+* F_0 = 0, F_1 = 1, F_2 = 1     SUB
+* VF_0 F_0 0 pwl(0n 0 )
+* VF_1 F_1 0 pwl(0n 0 0.01n 1.1)
+* VF_2 F_2 0 pwl(0n 0 0.01n 1.1)
+
+.TRAN 1e-9 40e-9 START=0.0
+
+.END
+
+

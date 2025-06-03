@@ -1,14 +1,14 @@
 .title 8bit_ADD
 
 
-.OPTIONS POST BRIEF
+.OPTIONS POST BRIEF redefsub
 .OP
 .LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
 .TEMP 25
 .GLOBAL vss vdd
 
-v0 vss 0 DC=0
-v1 vdd vss DC=1.1
+* v0 vss 0 DC=0
+* v1 vdd vss DC=1.1
 
 .subckt inv vi vo vdd vss
 XP vo vi vdd vdd p11ll_ckt w=180n l=40n $ PMOS
@@ -211,7 +211,7 @@ XSout_7 P_7 Cout_6 S_7 vdd vss Sout
 
 
 * Test case for ripple carry adder
-Xripple_carry_adder_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 S_0 S_1 S_2 S_3 S_4 S_5 S_6 S_7 Cin Cout vdd vss ripple_carry_adder
+* Xripple_carry_adder_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 S_0 S_1 S_2 S_3 S_4 S_5 S_6 S_7 Cin Cout vdd vss ripple_carry_adder
 
 * .IC V(Cout)=0 V(S_0)=0 V(S_1)=0 V(S_2)=0 V(S_3)=0 V(S_4)=0 V(S_5)=0 V(S_6)=0 V(S_7)=0
 
