@@ -1,0 +1,78 @@
+.OPTIONS POST BRIEF
+
+.OP
+.LIB "/home/htj/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+
+VDD vdd 0 DC 1.1
+
+.TRAN 0.01n 50n UIC
+
+.OPTIONS POST
+.PRINT TRAN V(lin) V(lout)
+
+
+.PARAM mos_w=330n
+.PARAM mos_l=40n
+.PARAM nmos_w=1200n
+.PARAM nmos_l=120n
+.PARAM pmos_w=1400n
+.PARAM pmos_l=120n
+
+.subckt NAND2 A B net_nand VDD GND
+XP1 net_nand A VDD VDD p11ll_ckt W=mos_w L=mos_l
+XP2 net_nand B VDD VDD p11ll_ckt W=mos_w L=mos_l
+XN1 net_nand A net1 GND n11ll_ckt W=nmos_w L=nmos_l
+XN2 net1 B GND GND n11ll_ckt W=nmos_w L=nmos_l
+.ends
+
+.subckt MUX select A B out VDD GND
+XINV   select sel_n   VDD GND INV
+XAND1  A select T VDD GND NAND2
+XAND2  B sel_n  T VDD GND NAND2
+XINV1   T OUT   VDD GND INV
+.ends
+
+.subckt INV A Y VDD GND
+XP1 Y A VDD VDD p11ll_ckt W=mos_w*2 L=mos_l*2
+XN1 Y A GND GND n11ll_ckt W=nmos_w*2 L=nmos_l*2
+.ends
+
+
+.subckt TWOMUX A0 B0 A1 B1 A2 B2 A3 B3 A4 B4 A5 B5 A6 B6 A7 B7 VDD GND OUT0 OUT1 OUT2 OUT3 OUT4 OUT5 OUT6 OUT7 
+XMUX0 select A0 B0 OUT0 VDD GND MUX
+XMUX1 select A1 B1 OUT1 VDD GND MUX
+XMUX2 select A2 B2 OUT2 VDD GND MUX
+XMUX3 select A3 B3 OUT3 VDD GND MUX
+XMUX4 select A4 B4 OUT4 VDD GND MUX
+XMUX5 select A5 B5 OUT5 VDD GND MUX
+XMUX6 select A6 B6 OUT6 VDD GND MUX
+XMUX7 select A7 B7 OUT7 VDD GND MUX
+.ends
+
+
+VSE1 select 0 PULSE(0 1.1 0 10p 10p 1n 2n)
+VIN1 A0 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN2 B0 0 PULSE(0 1.1 5n 10p 10p 10n 20n)
+VIN3 A1 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN4 B1 0 PULSE(0 1.1 0 10p 10p 10n 20n)
+VIN5 A2 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN6 B2 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN7 A3 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN8 B3 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN9 A4 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN11 B4 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN22 A5 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN33 B5 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN44 A6 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN55 B6 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN66 A7 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+VIN77 B7 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+
+X2MUX1 A0 B0 A1 B1 A2 B2 A3 B3 A4 B4 A5 B0 A6 B6 A7 B7 VDD GND OUT0 OUT1 OUT2 OUT3 OUT4 OUT5 OUT6 OUT7 TWOMUX
+
+
+.PRINT TRAN V(A0) V(B0) V(OUT0)
+
+
+.end
