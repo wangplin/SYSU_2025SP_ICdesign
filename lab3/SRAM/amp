@@ -1,0 +1,33 @@
+.OPTIONS POST BRIEF
+
+.OP
+*.LIB "/home/htj/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+
+*VDD vdd 0 DC 1.1
+*VIN lin 0 PULSE(0 1.1 0 10p 10p 5n 10n)
+*.TRAN 0.01n 20n UIC
+.OPTIONS POST
+
+
+
+.subckt amp bl blb sense_clk sa_out vdd vss
+Xm6 sa_out net7 net8 vss n11ll_ckt l=40e-9 w=250e-9 m=1 nf=1 sd=140e-9 ad=29.7e-15 as=29.7e-15 pd=760e-9 ps=760e-9 nrd=108.658e-3 nrs=108.658e-3 sa=110e-9 sb=110e-9
+Xm5 net7 sa_out net8 vss n11ll_ckt l=40e-9 w=250e-9 m=1 nf=1 sd=140e-9 ad=29.7e-15 as=29.7e-15 pd=760e-9 ps=760e-9 nrd=108.658e-3 nrs=108.658e-3 sa=110e-9 sb=110e-9
+Xm0 net8 sense_clk vss vss n11ll_ckt l=40e-9 w=250e-9 m=1 nf=1 sd=140e-9 ad=29.7e-15 as=29.7e-15 pd=760e-9 ps=760e-9 nrd=108.658e-3 nrs=108.658e-3 sa=110e-9 sb=110e-9
+Xm4 net7 sa_out vdd vdd p11ll_ckt l=40e-9 w=500e-9 m=1 nf=1 sd=140e-9 ad=79.2e-15 as=79.2e-15 pd=1.66e-6 ps=1.66e-6 nrd=67.341e-3 nrs=67.341e-3 sa=110e-9 sb=110e-9
+Xm3 sa_out net7 vdd vdd p11ll_ckt l=40e-9 w=500e-9 m=1 nf=1 sd=140e-9 ad=79.2e-15 as=79.2e-15 pd=1.66e-6 ps=1.66e-6 nrd=67.341e-3 nrs=67.341e-3 sa=110e-9 sb=110e-9
+Xm2 sa_out sense_clk bl vdd p11ll_ckt l=40e-9 w=500e-9 m=1 nf=1 sd=140e-9 ad=79.2e-15 as=79.2e-15 pd=1.66e-6 ps=1.66e-6 nrd=67.341e-3 nrs=67.341e-3 sa=110e-9 sb=110e-9
+Xm1 net7 sense_clk blb vdd p11ll_ckt l=40e-9 w=500e-9 m=1 nf=1 sd=140e-9 ad=79.2e-15 as=79.2e-15 pd=1.66e-6 ps=1.66e-6 nrd=67.341e-3 nrs=67.341e-3 sa=110e-9 sb=110e-9
+.ends
+
+*Xamp bl0 blb0 clk out0 vdd gnd amp
+
+*.IC v(OUT0)=0 v(OUT1)=0 v(OUT2)=0 v(OUT3)=0 v(OUT4)=0 v(OUT5)=0 v(OUT6)=0 v(OUT7)=0
+*VSE1 select1 0 PULSE(0 0.7 0.0n 10p 10p 0.4n 0.8n)
+*Vdin_0 din_0 0 pwl (0n 0 4.99n 0 5n 1.1 9.99n 1.1 10n 0)
+*VSE1 blb0 0 PULSE(0 0.7 0.0n 10p 10p 400n 800n)
+*VSE2 bl0 0 PULSE(0 0.2 0.0n 10p 10p 400n 800n)
+*VSE3 CLK 0 PULSE(0 1.1 0.0n 10p 10p 400n 800n)
+
+.end

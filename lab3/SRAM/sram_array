@@ -1,0 +1,133 @@
+.title sram_array
+
+.PARAM res = 0
+.PARAM cap = 0
+
+.PARAM p12w = 120n
+.PARAM a12w = 180n
+.PARAM n12w = 240n
+
+.ic V(Xcell_0_2.bl_in) = 0V
+
+.OPTIONS POST BRIEF
+.OP
+.LIB "/home/htj/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+.GLOBAL gnd vdd_0
+
+.include 'amp'
+.include '3bit_select'
+
+.subckt sram_and2 A B out VDD GND
+XP1 net_nand A VDD VDD p11ll_ckt W=180n L=40n
+XP2 net_nand B VDD VDD p11ll_ckt W=180n L=40n
+XN1 net_nand A net1 GND n11ll_ckt W=120n L=40n
+XN2 net1 B GND GND n11ll_ckt W=120n L=40n
+XINV net_nand out inv
+.ends
+
+.subckt inv vi vo
+XP vo vi vdd_0 vdd_0 p11ll_ckt w=330n l=40n $ PMOS
+XN vo vi gnd gnd n11ll_ckt w=280n l=40n $ NMOS
+.ends inv
+
+*       m0         m1
+*   m4                  m5
+*       m2         m3
+.subckt sram_cell bl blb vddi vddsd vssi wl
+Xm0 vddsd blb_in bl_in vddi p11ll_ckt w=p12w l=40n
+Xm1 vddsd bl_in blb_in vddi p11ll_ckt w=p12w l=40n
+Xm2 bl_in blb_in vssi vssi n11ll_ckt w=n12w l=40n
+Xm3 blb_in bl_in vssi vssi n11ll_ckt w=n12w l=40n
+Xm4 bl wl bl_in vssi n11ll_ckt w=a12w l=40n
+Xm5 blb wl blb_in vssi n11ll_ckt w=a12w l=40n
+.ends sram_cell
+
+
+.subckt write_driver vdd vss din wre bl blb
+xi0 din net0 inv
+xi1 wre net1 inv
+Xm6 vdd net0 net2 vdd p11ll_ckt w=330n l=40n
+Xm7 vdd din net3 vdd p11ll_ckt w=330n l=40n
+Xm8 net2 net1 bl vdd p11ll_ckt w=330n l=40n
+Xm9 net3 net1 blb vdd p11ll_ckt w=330n l=40n
+Xm10 bl wre net4 vss n11ll_ckt w=280n l=40n
+Xm11 blb wre net5 vss n11ll_ckt w=280n l=40n
+Xm12 net4 net0 vss vss n11ll_ckt w=280n l=40n
+Xm13 net5 din vss vss n11ll_ckt w=280n l=40n
+.ends write_driver
+
+.subckt precharge_circuit bl blb vdd precharge
+Xm14 blb precharge bl vdd p11ll_ckt w=330n l=40n
+Xm15 blb precharge bl vdd p11ll_ckt w=330n l=40n
+Xm16 blb precharge bl vdd p11ll_ckt w=330n l=40n
+.ends precharge_circuit
+
+
+.subckt sram_raw bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl vdd gnd
+Xcell_0 bl_0 blb_0 vdd vdd gnd wl sram_cell
+Xcell_1 bl_1 blb_1 vdd vdd gnd wl sram_cell
+Xcell_2 bl_2 blb_2 vdd vdd gnd wl sram_cell
+Xcell_3 bl_3 blb_3 vdd vdd gnd wl sram_cell
+Xcell_4 bl_4 blb_4 vdd vdd gnd wl sram_cell
+Xcell_5 bl_5 blb_5 vdd vdd gnd wl sram_cell
+Xcell_6 bl_6 blb_6 vdd vdd gnd wl sram_cell
+Xcell_7 bl_7 blb_7 vdd vdd gnd wl sram_cell
+.ends
+
+
+.subckt sram_array bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_0 wl_1 wl_2 wl_3 wl_4 wl_5 wl_6 wl_7 vdd gnd
+Xsram_raw_0 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_0 vdd gnd sram_raw
+Xsram_raw_1 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_1 vdd gnd sram_raw
+Xsram_raw_2 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_2 vdd gnd sram_raw
+Xsram_raw_3 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_3 vdd gnd sram_raw
+Xsram_raw_4 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_4 vdd gnd sram_raw
+Xsram_raw_5 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_5 vdd gnd sram_raw
+Xsram_raw_6 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_6 vdd gnd sram_raw
+Xsram_raw_7 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_7 vdd gnd sram_raw
+.ends
+
+.subckt sram A0 A1 A2 precharge clk wre din_0 din_1 din_2 din_3 din_4 din_5 din_6 din_7 out_0 out_1 out_2 out_3 out_4 out_5 out_6 out_7 vdd_0 gnd
+* 写驱动
+Xwrite_driver_0 vdd_0 gnd din_0 wre bl_0 blb_0 write_driver
+Xwrite_driver_1 vdd_0 gnd din_1 wre bl_1 blb_1 write_driver
+Xwrite_driver_2 vdd_0 gnd din_2 wre bl_2 blb_2 write_driver
+Xwrite_driver_3 vdd_0 gnd din_3 wre bl_3 blb_3 write_driver
+Xwrite_driver_4 vdd_0 gnd din_4 wre bl_4 blb_4 write_driver
+Xwrite_driver_5 vdd_0 gnd din_5 wre bl_5 blb_5 write_driver
+Xwrite_driver_6 vdd_0 gnd din_6 wre bl_6 blb_6 write_driver
+Xwrite_driver_7 vdd_0 gnd din_7 wre bl_7 blb_7 write_driver
+*运放
+Xamp_0 bl_0 blb_0 clk out_0 vdd_0 gnd amp
+Xamp_1 bl_1 blb_1 clk out_1 vdd_0 gnd amp
+Xamp_2 bl_2 blb_2 clk out_2 vdd_0 gnd amp
+Xamp_3 bl_3 blb_3 clk out_3 vdd_0 gnd amp
+Xamp_4 bl_4 blb_4 clk out_4 vdd_0 gnd amp
+Xamp_5 bl_5 blb_5 clk out_5 vdd_0 gnd amp
+Xamp_6 bl_6 blb_6 clk out_6 vdd_0 gnd amp
+Xamp_7 bl_7 blb_7 clk out_7 vdd_0 gnd amp
+*片选 A0 A1 A2 000-0 001-1
+Xsram_select A0 A1 A2 pwl_7 pwl_6 pwl_5 pwl_4 pwl_3 pwl_2 pwl_1 pwl_0 vdd_0 GND sram_3select8
+*使能锁定
+Xwl_lock_0 pwl_0 precharge wl_0 vdd_0 GND sram_and2
+Xwl_lock_1 pwl_1 precharge wl_1 vdd_0 GND sram_and2
+Xwl_lock_2 pwl_2 precharge wl_2 vdd_0 GND sram_and2
+Xwl_lock_3 pwl_3 precharge wl_3 vdd_0 GND sram_and2
+Xwl_lock_4 pwl_4 precharge wl_4 vdd_0 GND sram_and2
+Xwl_lock_5 pwl_5 precharge wl_5 vdd_0 GND sram_and2
+Xwl_lock_6 pwl_6 precharge wl_6 vdd_0 GND sram_and2
+Xwl_lock_7 pwl_7 precharge wl_7 vdd_0 GND sram_and2
+*充电
+Xprecharge_0 bl_0 blb_0 vdd_0 precharge precharge_circuit
+Xprecharge_1 bl_1 blb_1 vdd_0 precharge precharge_circuit
+Xprecharge_2 bl_2 blb_2 vdd_0 precharge precharge_circuit
+Xprecharge_3 bl_3 blb_3 vdd_0 precharge precharge_circuit
+Xprecharge_4 bl_4 blb_4 vdd_0 precharge precharge_circuit
+Xprecharge_5 bl_5 blb_5 vdd_0 precharge precharge_circuit
+Xprecharge_6 bl_6 blb_6 vdd_0 precharge precharge_circuit
+Xprecharge_7 bl_7 blb_7 vdd_0 precharge precharge_circuit
+*主阵列
+Xsram_array bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_0 wl_1 wl_2 wl_3 wl_4 wl_5 wl_6 wl_7 vdd_0 gnd sram_array
+.ends
+
+.END

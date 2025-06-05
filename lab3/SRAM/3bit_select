@@ -1,0 +1,45 @@
+.OPTIONS POST BRIEF redefsub
+.OP
+.LIB "/home/htj/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+.GLOBAL gnd vdd_0
+
+
+
+.subckt sram_3select8 A0 A1 A2 Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7 VDD GND
+xinv0 A0 A0_bar VDD GND inva
+xinv1 A1 A1_bar VDD GND inva
+xinv2 A2 A2_bar VDD GND inva
+xnand0 A0_bar A1_bar A2_bar net0 VDD GND nand3
+xnand1 A0 A1_bar A2_bar net1 VDD GND nand3
+xnand2 A0_bar A1 A2_bar net2 VDD GND nand3
+xnand3 A0 A1 A2_bar net3 VDD GND nand3
+xnand4 A0_bar A1_bar A2 net4 VDD GND nand3
+xnand5 A0 A1_bar A2 net5 VDD GND nand3
+xnand6 A0_bar A1 A2 net6 VDD GND nand3
+xnand7 A0 A1 A2 net7 VDD GND nand3
+xinv0_out net0 Y0 VDD GND inva
+xinv1_out net1 Y1 VDD GND inva
+xinv2_out net2 Y2 VDD GND inva
+xinv3_out net3 Y3 VDD GND inva
+xinv4_out net4 Y4 VDD GND inva
+xinv5_out net5 Y5 VDD GND inva
+xinv6_out net6 Y6 VDD GND inva
+xinv7_out net7 Y7 VDD GND inva
+.ends decoder3x8
+
+.subckt inva in out VDD GND
+xmp1 out in VDD VDD p11ll_ckt w=180n l=40n
+xmn1 out in GND GND n11ll_ckt w=120n l=40n
+.ends inva
+
+.subckt nand3 in1 in2 in3 out VDD GND
+xmp1 out in1 VDD VDD p11ll_ckt w=180n l=40n
+xmp2 out in2 VDD VDD p11ll_ckt w=180n l=40n
+xmp3 out in3 VDD VDD p11ll_ckt w=180n l=40n
+xmn1 out in1 net1 GND n11ll_ckt w=120n l=40n
+xmn2 net1 in2 net2 GND n11ll_ckt w=120n l=40n
+xmn3 net2 in3 GND GND n11ll_ckt w=120n l=40n
+.ends nand3
+
+.end
