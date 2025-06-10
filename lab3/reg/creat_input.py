@@ -41,5 +41,72 @@ def generate_PWL(rows=3, cols=1, index = 0, signal = [0, 0, 1, 1, 0, 1]):
     return "\n".join(lines)
 
 if __name__ == "__main__":
-    out = generate_PWL()
-    print(out)
+    # input data
+    # print(generate_PWL(signal=[0,0,0,0,0,0,1]))
+    # print("----------------")
+    # print(generate_PWL(signal=[0,0,0,0,0,1,1]))
+    # print("----------------")
+    # print(generate_PWL(signal=[0,0,0,0,1,0,1]))
+    # print("----------------")
+    # print(generate_PWL(signal=[0,0,0,0,1,1,1]))
+    # print("----------------")
+    # print(generate_PWL(signal=[0,0,0,1,0,0,0]))
+    # print("----------------")
+    # print(generate_PWL(signal=[0,0,0,1,0,1,0]))
+    # print("----------------")
+    # print(generate_PWL(signal=[0,0,0,1,1,0,0]))
+    # print("----------------")
+    # print(generate_PWL(signal=[0,0,0,1,1,1,0]))
+    # print("----------------")
+    # 24 encoder input
+    # reset_n
+    print(generate_PWL(signal=[0,0,1,1,1,1,1]))
+    print("----------------")
+    # wen
+    print(generate_PWL(signal=[1,1,0,0,0,0,1]))
+    print("----------------")
+    # waddr_1
+    print(generate_PWL(signal=[0,0,0,0,1,1,0]))
+    print("----------------")
+    # waddr_0
+    print(generate_PWL(signal=[0,0,0,1,0,1,0]))
+    print("----------------")
+
+    # wdata_7
+    print(generate_PWL(signal=[0,0,0,0,0,0,0]))
+    print("----------------")
+    # wdata_6
+    print(generate_PWL(signal=[0,0,0,0,0,0,0]))
+    print("----------------")
+    # wdata_5
+    print(generate_PWL(signal=[0,0,0,0,0,0,0]))
+    print("----------------")
+    # wdata_4
+    print(generate_PWL(signal=[0,0,0,0,0,0,0]))
+    print("----------------")
+    # wdata_3
+    print(generate_PWL(signal=[0,0,0,0,0,1,0]))
+    print("----------------")
+    # wdata_2
+    print(generate_PWL(signal=[0,0,0,0,1,0,0]))
+    print("----------------")
+    # wdata_1
+    print(generate_PWL(signal=[0,0,0,1,0,0,0]))
+    print("----------------")
+    # wdata_7
+    print(generate_PWL(signal=[0,0,1,0,0,0,0]))
+    print("----------------")
+
+    # raddr0_1
+    print(generate_PWL(signal=[0,0,0,1,0,0,0]))
+    print("----------------")
+    # raddr0_0
+    print(generate_PWL(signal=[0,0,0,0,0,1,0]))
+    print("----------------")
+
+    # raddr1_1
+    print(generate_PWL(signal=[0,0,0,1,1,1,0]))
+    print("----------------")
+    # raddr1_0
+    print(generate_PWL(signal=[0,0,1,1,0,1,0]))
+    print("----------------")
