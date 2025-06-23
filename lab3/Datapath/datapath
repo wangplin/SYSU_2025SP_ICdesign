@@ -11,10 +11,10 @@
 * v0 vss 0 DC=0
 * v1 vdd vss DC=1.1
 
-.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/ALU/alu'
-.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/Reg/reg.sp'
-.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/SRAM/sram_array'
-.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/ALU/TWOMUX/TWOMUX'
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab3/ALU/alu'
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab3/Reg/reg.sp'
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab3/SRAM/sram_array'
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab3/ALU/TWOMUX/TWOMUX'
 
 
 .subckt inv vi vo vdd vss

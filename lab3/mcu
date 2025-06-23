@@ -12,9 +12,9 @@ v0 vss 0 DC=0
 v1 vdd vss DC=1.1
 
 
-.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/Datapath/datapath'
-.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/Control/FSM'
-* .include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/Reg/reg.sp'
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab3/Datapath/datapath'
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab3/Control/FSM'
+* .include '/home/wangpl/Projects/Digital_lab_2025spring/lab3/Reg/reg.sp'
 
 
 .subckt inv vi vo vdd vss
