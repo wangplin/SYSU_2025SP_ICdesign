@@ -1,0 +1,85 @@
+.title mcu
+
+
+.OPTIONS POST BRIEF
+.OP
+.LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+.GLOBAL vss vdd
+
+
+v0 vss 0 DC=0
+v1 vdd vss DC=1.1
+
+
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/Datapath/datapath'
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/Control/FSM'
+* .include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/Reg/reg.sp'
+
+
+.subckt inv vi vo vdd vss
+XP vo vi vdd vdd p11ll_ckt w=330n l=40n $ PMOS
+XN vo vi vss vss n11ll_ckt w=280n l=40n $ NMOS
+.ends inv
+
+
+Xinv_clk clk clk_bar vdd vss inv
+
+Xdatapath clk instr_8 instr_7 instr_6 instr_5 instr_4 instr_3 instr_2 instr_1 instr_0 op_2 op_1 op_0
++ instr_en reg_write alu_result mem_write mem2reg
++ precharge
++ reset_n
++ vdd vss
++ datapath
+
+Xstate_control cur_state_0 cur_state_1 cur_state_2 next_state_0 next_state_1 next_state_2 op_0 op_1 op_2 vdd vss state_control
+
+Xstate_reg vdd vss clk clk_bar vdd vss
++ next_state_2 next_state_1 next_state_0
++ cur_state_2 cur_state_1 cur_state_0
++ reg_array_3
+
+
+Xcontrol_signal cur_state_0 cur_state_1 cur_state_2
++ instr_en reg_write alu_result mem_write mem2reg
++ vdd vss
++ control_signal
+
+.TRAN 1e-9 20e-9 START=0.0
+
+
+.IC v(cur_state_0)=0 v(cur_state_1)=0 v(cur_state_2)=0
++ v(next_state_0)=0 v(next_state_1)=0 v(next_state_2)=0
+
+Vclk clk 0 PULSE(0 1.1 0 1e-14 1e-14 5e-9 1e-8)
+Vprecharge precharge 0 PULSE(0 1.1 0 1e-14 1e-14 2e-9 1e-8)
+
+Vreset_n reset_n 0 pwl(0n 0 0.01n 1.1)
+
+
+
+* Instruction
+
+Vinstr_0 instr_0 0 pwl(0n 0 0.01n 1.1)
+Vinstr_1 instr_1 0 pwl(0n 0 )
+Vinstr_2 instr_2 0 pwl(0n 0 0.01n 1.1)
+Vinstr_3 instr_3 0 pwl(0n 0 0.01n 1.1)
+Vinstr_4 instr_4 0 pwl(0n 0 )
+Vinstr_5 instr_5 0 pwl(0n 0 0.01n 1.1)
+Vinstr_6 instr_6 0 pwl(0n 0 )
+Vinstr_7 instr_7 0 pwl(0n 0 )
+Vinstr_8 instr_8 0 pwl(0n 0 )
+
+
+
+
+
+
+
+
+
+.END
+
+
+
+

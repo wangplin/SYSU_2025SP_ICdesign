@@ -1,0 +1,112 @@
+.title select
+.OPTIONS POST BRIEF redefsub
+.OP
+
+.LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+
+.subckt sram_6select64 A0 A1 A2 A3 A4 A5 Y0 Y1 Y2 Y3 Y4 Y5 Y6 Y7 Y8 Y9 Y10 Y11 Y12 Y13 Y14 Y15 Y16 Y17 Y18 Y19 Y20 Y21 Y22 Y23 Y24 Y25 Y26 Y27 Y28 Y29 Y30 Y31 Y32 Y33 Y34 Y35 Y36 Y37 Y38 Y39 Y40 Y41 Y42 Y43 Y44 Y45 Y46 Y47 Y48 Y49 Y50 Y51 Y52 Y53 Y54 Y55 Y56 Y57 Y58 Y59 Y60 Y61 Y62 Y63 VDD GND
+xinv0 A0 A0_bar VDD GND inva
+xinv1 A1 A1_bar VDD GND inva
+xinv2 A2 A2_bar VDD GND inva
+xinv3 A3 A3_bar VDD GND inva
+xinv4 A4 A4_bar VDD GND inva
+xinv5 A5 A5_bar VDD GND inva
+xand0 A0_bar A1_bar A2_bar A3_bar A4_bar A5_bar Y0 VDD GND and6
+xand1 A0 A1_bar A2_bar A3_bar A4_bar A5_bar Y1 VDD GND and6
+xand2 A0_bar A1 A2_bar A3_bar A4_bar A5_bar Y2 VDD GND and6
+xand3 A0 A1 A2_bar A3_bar A4_bar A5_bar Y3 VDD GND and6
+xand4 A0_bar A1_bar A2 A3_bar A4_bar A5_bar Y4 VDD GND and6
+xand5 A0 A1_bar A2 A3_bar A4_bar A5_bar Y5 VDD GND and6
+xand6 A0_bar A1 A2 A3_bar A4_bar A5_bar Y6 VDD GND and6
+xand7 A0 A1 A2 A3_bar A4_bar A5_bar Y7 VDD GND and6
+xand8 A0_bar A1_bar A2_bar A3 A4_bar A5_bar Y8 VDD GND and6
+xand9 A0 A1_bar A2_bar A3 A4_bar A5_bar Y9 VDD GND and6
+xand10 A0_bar A1 A2_bar A3 A4_bar A5_bar Y10 VDD GND and6
+xand11 A0 A1 A2_bar A3 A4_bar A5_bar Y11 VDD GND and6
+xand12 A0_bar A1_bar A2 A3 A4_bar A5_bar Y12 VDD GND and6
+xand13 A0 A1_bar A2 A3 A4_bar A5_bar Y13 VDD GND and6
+xand14 A0_bar A1 A2 A3 A4_bar A5_bar Y14 VDD GND and6
+xand15 A0 A1 A2 A3 A4_bar A5_bar Y15 VDD GND and6
+xand16 A0_bar A1_bar A2_bar A3_bar A4 A5_bar Y16 VDD GND and6
+xand17 A0 A1_bar A2_bar A3_bar A4 A5_bar Y17 VDD GND and6
+xand18 A0_bar A1 A2_bar A3_bar A4 A5_bar Y18 VDD GND and6
+xand19 A0 A1 A2_bar A3_bar A4 A5_bar Y19 VDD GND and6
+xand20 A0_bar A1_bar A2 A3_bar A4 A5_bar Y20 VDD GND and6
+xand21 A0 A1_bar A2 A3_bar A4 A5_bar Y21 VDD GND and6
+xand22 A0_bar A1 A2 A3_bar A4 A5_bar Y22 VDD GND and6
+xand23 A0 A1 A2 A3_bar A4 A5_bar Y23 VDD GND and6
+xand24 A0_bar A1_bar A2_bar A3 A4 A5_bar Y24 VDD GND and6
+xand25 A0 A1_bar A2_bar A3 A4 A5_bar Y25 VDD GND and6
+xand26 A0_bar A1 A2_bar A3 A4 A5_bar Y26 VDD GND and6
+xand27 A0 A1 A2_bar A3 A4 A5_bar Y27 VDD GND and6
+xand28 A0_bar A1_bar A2 A3 A4 A5_bar Y28 VDD GND and6
+xand29 A0 A1_bar A2 A3 A4 A5_bar Y29 VDD GND and6
+xand30 A0_bar A1 A2 A3 A4 A5_bar Y30 VDD GND and6
+xand31 A0 A1 A2 A3 A4 A5_bar Y31 VDD GND and6
+xand32 A0_bar A1_bar A2_bar A3_bar A4_bar A5 Y32 VDD GND and6
+xand33 A0 A1_bar A2_bar A3_bar A4_bar A5 Y33 VDD GND and6
+xand34 A0_bar A1 A2_bar A3_bar A4_bar A5 Y34 VDD GND and6
+xand35 A0 A1 A2_bar A3_bar A4_bar A5 Y35 VDD GND and6
+xand36 A0_bar A1_bar A2 A3_bar A4_bar A5 Y36 VDD GND and6
+xand37 A0 A1_bar A2 A3_bar A4_bar A5 Y37 VDD GND and6
+xand38 A0_bar A1 A2 A3_bar A4_bar A5 Y38 VDD GND and6
+xand39 A0 A1 A2 A3_bar A4_bar A5 Y39 VDD GND and6
+xand40 A0_bar A1_bar A2_bar A3 A4_bar A5 Y40 VDD GND and6
+xand41 A0 A1_bar A2_bar A3 A4_bar A5 Y41 VDD GND and6
+xand42 A0_bar A1 A2_bar A3 A4_bar A5 Y42 VDD GND and6
+xand43 A0 A1 A2_bar A3 A4_bar A5 Y43 VDD GND and6
+xand44 A0_bar A1_bar A2 A3 A4_bar A5 Y44 VDD GND and6
+xand45 A0 A1_bar A2 A3 A4_bar A5 Y45 VDD GND and6
+xand46 A0_bar A1 A2 A3 A4_bar A5 Y46 VDD GND and6
+xand47 A0 A1 A2 A3 A4_bar A5 Y47 VDD GND and6
+xand48 A0_bar A1_bar A2_bar A3_bar A4 A5 Y48 VDD GND and6
+xand49 A0 A1_bar A2_bar A3_bar A4 A5 Y49 VDD GND and6
+xand50 A0_bar A1 A2_bar A3_bar A4 A5 Y50 VDD GND and6
+xand51 A0 A1 A2_bar A3_bar A4 A5 Y51 VDD GND and6
+xand52 A0_bar A1_bar A2 A3_bar A4 A5 Y52 VDD GND and6
+xand53 A0 A1_bar A2 A3_bar A4 A5 Y53 VDD GND and6
+xand54 A0_bar A1 A2 A3_bar A4 A5 Y54 VDD GND and6
+xand55 A0 A1 A2 A3_bar A4 A5 Y55 VDD GND and6
+xand56 A0_bar A1_bar A2_bar A3 A4 A5 Y56 VDD GND and6
+xand57 A0 A1_bar A2_bar A3 A4 A5 Y57 VDD GND and6
+xand58 A0_bar A1 A2_bar A3 A4 A5 Y58 VDD GND and6
+xand59 A0 A1 A2_bar A3 A4 A5 Y59 VDD GND and6
+xand60 A0_bar A1_bar A2 A3 A4 A5 Y60 VDD GND and6
+xand61 A0 A1_bar A2 A3 A4 A5 Y61 VDD GND and6
+xand62 A0_bar A1 A2 A3 A4 A5 Y62 VDD GND and6
+xand63 A0 A1 A2 A3 A4 A5 Y63 VDD GND and6
+.ends
+
+.subckt inva in out VDD GND
+xmp1 out in VDD VDD p11ll_ckt w=180n l=40n
+xmn1 out in GND GND n11ll_ckt w=120n l=40n
+.ends
+
+.subckt and6 in1 in2 in3 in4 in5 in6 Y VDD GND
+xmp1 out in1 VDD VDD p11ll_ckt w=180n l=40n
+xmp2 out in2 VDD VDD p11ll_ckt w=180n l=40n
+xmp3 out in3 VDD VDD p11ll_ckt w=180n l=40n
+xmp4 out in4 VDD VDD p11ll_ckt w=180n l=40n
+xmp5 out in5 VDD VDD p11ll_ckt w=180n l=40n
+xmp6 out in6 VDD VDD p11ll_ckt w=180n l=40n
+xmn1 out in1 net1 GND n11ll_ckt w=120n l=40n
+xmn2 net1 in2 net2 GND n11ll_ckt w=120n l=40n
+xmn3 net2 in3 net3 GND n11ll_ckt w=120n l=40n
+xmn4 net3 in4 net4 GND n11ll_ckt w=120n l=40n
+xmn5 net4 in5 net5 GND n11ll_ckt w=120n l=40n
+xmn6 net5 in6 GND GND n11ll_ckt w=120n l=40n
+xinv out Y VDD GND inva
+.ends
+
+*v0 gnd 0 DC=0
+*v1 vdd_0 gnd DC=1.1
+*.TRAN 0.02n 25.60n UIC
+*Xsram_select A0 A1 A2 A3 A4 A5 pwl_0 pwl_1 pwl_2 pwl_3 pwl_4 pwl_5 pwl_6 pwl_7 pwl_8 pwl_9 pwl_10 pwl_11 pwl_12 pwl_13 pwl_14 pwl_15 pwl_16 pwl_17 pwl_18 pwl_19 pwl_20 pwl_21 pwl_22 pwl_23 pwl_24 pwl_25 pwl_26 pwl_27 pwl_28 pwl_29 pwl_30 pwl_31 pwl_32 pwl_33 pwl_34 pwl_35 pwl_36 pwl_37 pwl_38 pwl_39 pwl_40 pwl_41 pwl_42 pwl_43 pwl_44 pwl_45 pwl_46 pwl_47 pwl_48 pwl_49 pwl_50 pwl_51 pwl_52 pwl_53 pwl_54 pwl_55 pwl_56 pwl_57 pwl_58 pwl_59 pwl_60 pwl_61 pwl_62 pwl_63 vdd_0 GND sram_6select64
+*VA0 A0 0 PWL(0.00n 0.0, 0.00n 0.0, 0.01n 0.0, 0.40n 0.0, 0.41n 1.1, 0.80n 1.1, 0.81n 0.0, 1.20n 0.0, 1.21n 1.1, 1.60n 1.1, 1.61n 0.0, 2.00n 0.0, 2.01n 1.1, 2.40n 1.1, 2.41n 0.0, 2.80n 0.0, 2.81n 1.1, 3.20n 1.1, 3.21n 0.0, 3.60n 0.0, 3.61n 1.1, 4.00n 1.1, 4.01n 0.0, 4.40n 0.0, 4.41n 1.1, 4.80n 1.1, 4.81n 0.0, 5.20n 0.0, 5.21n 1.1, 5.60n 1.1, 5.61n 0.0, 6.00n 0.0, 6.01n 1.1, 6.40n 1.1, 6.41n 0.0, 6.80n 0.0, 6.81n 1.1, 7.20n 1.1, 7.21n 0.0, 7.60n 0.0, 7.61n 1.1, 8.00n 1.1, 8.01n 0.0, 8.40n 0.0, 8.41n 1.1, 8.80n 1.1, 8.81n 0.0, 9.20n 0.0, 9.21n 1.1, 9.60n 1.1, 9.61n 0.0, 10.00n 0.0, 10.01n 1.1, 10.40n 1.1, 10.41n 0.0, 10.80n 0.0, 10.81n 1.1, 11.20n 1.1, 11.21n 0.0, 11.60n 0.0, 11.61n 1.1, 12.00n 1.1, 12.01n 0.0, 12.40n 0.0, 12.41n 1.1, 12.80n 1.1, 12.81n 0.0, 13.20n 0.0, 13.21n 1.1, 13.60n 1.1, 13.61n 0.0, 14.00n 0.0, 14.01n 1.1, 14.40n 1.1, 14.41n 0.0, 14.80n 0.0, 14.81n 1.1, 15.20n 1.1, 15.21n 0.0, 15.60n 0.0, 15.61n 1.1, 16.00n 1.1, 16.01n 0.0, 16.40n 0.0, 16.41n 1.1, 16.80n 1.1, 16.81n 0.0, 17.20n 0.0, 17.21n 1.1, 17.60n 1.1, 17.61n 0.0, 18.00n 0.0, 18.01n 1.1, 18.40n 1.1, 18.41n 0.0, 18.80n 0.0, 18.81n 1.1, 19.20n 1.1, 19.21n 0.0, 19.60n 0.0, 19.61n 1.1, 20.00n 1.1, 20.01n 0.0, 20.40n 0.0, 20.41n 1.1, 20.80n 1.1, 20.81n 0.0, 21.20n 0.0, 21.21n 1.1, 21.60n 1.1, 21.61n 0.0, 22.00n 0.0, 22.01n 1.1, 22.40n 1.1, 22.41n 0.0, 22.80n 0.0, 22.81n 1.1, 23.20n 1.1, 23.21n 0.0, 23.60n 0.0, 23.61n 1.1, 24.00n 1.1, 24.01n 0.0, 24.40n 0.0, 24.41n 1.1, 24.80n 1.1, 24.81n 0.0, 25.20n 0.0, 25.21n 1.1, 25.60n 1.1)
+*VA1 A1 0 PWL(0.00n 0.0, 0.00n 0.0, 0.01n 0.0, 0.40n 0.0, 0.41n 0.0, 0.80n 0.0, 0.81n 1.1, 1.20n 1.1, 1.21n 1.1, 1.60n 1.1, 1.61n 0.0, 2.00n 0.0, 2.01n 0.0, 2.40n 0.0, 2.41n 1.1, 2.80n 1.1, 2.81n 1.1, 3.20n 1.1, 3.21n 0.0, 3.60n 0.0, 3.61n 0.0, 4.00n 0.0, 4.01n 1.1, 4.40n 1.1, 4.41n 1.1, 4.80n 1.1, 4.81n 0.0, 5.20n 0.0, 5.21n 0.0, 5.60n 0.0, 5.61n 1.1, 6.00n 1.1, 6.01n 1.1, 6.40n 1.1, 6.41n 0.0, 6.80n 0.0, 6.81n 0.0, 7.20n 0.0, 7.21n 1.1, 7.60n 1.1, 7.61n 1.1, 8.00n 1.1, 8.01n 0.0, 8.40n 0.0, 8.41n 0.0, 8.80n 0.0, 8.81n 1.1, 9.20n 1.1, 9.21n 1.1, 9.60n 1.1, 9.61n 0.0, 10.00n 0.0, 10.01n 0.0, 10.40n 0.0, 10.41n 1.1, 10.80n 1.1, 10.81n 1.1, 11.20n 1.1, 11.21n 0.0, 11.60n 0.0, 11.61n 0.0, 12.00n 0.0, 12.01n 1.1, 12.40n 1.1, 12.41n 1.1, 12.80n 1.1, 12.81n 0.0, 13.20n 0.0, 13.21n 0.0, 13.60n 0.0, 13.61n 1.1, 14.00n 1.1, 14.01n 1.1, 14.40n 1.1, 14.41n 0.0, 14.80n 0.0, 14.81n 0.0, 15.20n 0.0, 15.21n 1.1, 15.60n 1.1, 15.61n 1.1, 16.00n 1.1, 16.01n 0.0, 16.40n 0.0, 16.41n 0.0, 16.80n 0.0, 16.81n 1.1, 17.20n 1.1, 17.21n 1.1, 17.60n 1.1, 17.61n 0.0, 18.00n 0.0, 18.01n 0.0, 18.40n 0.0, 18.41n 1.1, 18.80n 1.1, 18.81n 1.1, 19.20n 1.1, 19.21n 0.0, 19.60n 0.0, 19.61n 0.0, 20.00n 0.0, 20.01n 1.1, 20.40n 1.1, 20.41n 1.1, 20.80n 1.1, 20.81n 0.0, 21.20n 0.0, 21.21n 0.0, 21.60n 0.0, 21.61n 1.1, 22.00n 1.1, 22.01n 1.1, 22.40n 1.1, 22.41n 0.0, 22.80n 0.0, 22.81n 0.0, 23.20n 0.0, 23.21n 1.1, 23.60n 1.1, 23.61n 1.1, 24.00n 1.1, 24.01n 0.0, 24.40n 0.0, 24.41n 0.0, 24.80n 0.0, 24.81n 1.1, 25.20n 1.1, 25.21n 1.1, 25.60n 1.1)
+*VA2 A2 0 PWL(0.00n 0.0, 0.00n 0.0, 0.01n 0.0, 0.40n 0.0, 0.41n 0.0, 0.80n 0.0, 0.81n 0.0, 1.20n 0.0, 1.21n 0.0, 1.60n 0.0, 1.61n 1.1, 2.00n 1.1, 2.01n 1.1, 2.40n 1.1, 2.41n 1.1, 2.80n 1.1, 2.81n 1.1, 3.20n 1.1, 3.21n 0.0, 3.60n 0.0, 3.61n 0.0, 4.00n 0.0, 4.01n 0.0, 4.40n 0.0, 4.41n 0.0, 4.80n 0.0, 4.81n 1.1, 5.20n 1.1, 5.21n 1.1, 5.60n 1.1, 5.61n 1.1, 6.00n 1.1, 6.01n 1.1, 6.40n 1.1, 6.41n 0.0, 6.80n 0.0, 6.81n 0.0, 7.20n 0.0, 7.21n 0.0, 7.60n 0.0, 7.61n 0.0, 8.00n 0.0, 8.01n 1.1, 8.40n 1.1, 8.41n 1.1, 8.80n 1.1, 8.81n 1.1, 9.20n 1.1, 9.21n 1.1, 9.60n 1.1, 9.61n 0.0, 10.00n 0.0, 10.01n 0.0, 10.40n 0.0, 10.41n 0.0, 10.80n 0.0, 10.81n 0.0, 11.20n 0.0, 11.21n 1.1, 11.60n 1.1, 11.61n 1.1, 12.00n 1.1, 12.01n 1.1, 12.40n 1.1, 12.41n 1.1, 12.80n 1.1, 12.81n 0.0, 13.20n 0.0, 13.21n 0.0, 13.60n 0.0, 13.61n 0.0, 14.00n 0.0, 14.01n 0.0, 14.40n 0.0, 14.41n 1.1, 14.80n 1.1, 14.81n 1.1, 15.20n 1.1, 15.21n 1.1, 15.60n 1.1, 15.61n 1.1, 16.00n 1.1, 16.01n 0.0, 16.40n 0.0, 16.41n 0.0, 16.80n 0.0, 16.81n 0.0, 17.20n 0.0, 17.21n 0.0, 17.60n 0.0, 17.61n 1.1, 18.00n 1.1, 18.01n 1.1, 18.40n 1.1, 18.41n 1.1, 18.80n 1.1, 18.81n 1.1, 19.20n 1.1, 19.21n 0.0, 19.60n 0.0, 19.61n 0.0, 20.00n 0.0, 20.01n 0.0, 20.40n 0.0, 20.41n 0.0, 20.80n 0.0, 20.81n 1.1, 21.20n 1.1, 21.21n 1.1, 21.60n 1.1, 21.61n 1.1, 22.00n 1.1, 22.01n 1.1, 22.40n 1.1, 22.41n 0.0, 22.80n 0.0, 22.81n 0.0, 23.20n 0.0, 23.21n 0.0, 23.60n 0.0, 23.61n 0.0, 24.00n 0.0, 24.01n 1.1, 24.40n 1.1, 24.41n 1.1, 24.80n 1.1, 24.81n 1.1, 25.20n 1.1, 25.21n 1.1, 25.60n 1.1)
+*vVA3 A3 0 PWL(0.00n 0.0, 0.00n 0.0, 0.01n 0.0, 0.40n 0.0, 0.41n 0.0, 0.80n 0.0, 0.81n 0.0, 1.20n 0.0, 1.21n 0.0, 1.60n 0.0, 1.61n 1.1, 2.00n 1.1, 2.01n 1.1, 2.40n 1.1, 2.41n 1.1, 2.80n 1.1, 2.81n 1.1, 3.20n 1.1, 3.21n 0.0, 3.60n 0.0, 3.61n 0.0, 4.00n 0.0, 4.01n 0.0, 4.40n 0.0, 4.41n 0.0, 4.80n 0.0, 4.81n 1.1, 5.20n 1.1, 5.21n 1.1, 5.60n 1.1, 5.61n 1.1, 6.00n 1.1, 6.01n 1.1, 6.40n 1.1, 6.41n 0.0, 6.80n 0.0, 6.81n 0.0, 7.20n 0.0, 7.21n 0.0, 7.60n 0.0, 7.61n 0.0, 8.00n 0.0, 8.01n 1.1, 8.40n 1.1, 8.41n 1.1, 8.80n 1.1, 8.81n 1.1, 9.20n 1.1, 9.21n 1.1, 9.60n 1.1, 9.61n 0.0, 10.00n 0.0, 10.01n 0.0, 10.40n 0.0, 10.41n 0.0, 10.80n 0.0, 10.81n 0.0, 11.20n 0.0, 11.21n 1.1, 11.60n 1.1, 11.61n 1.1, 12.00n 1.1, 12.01n 1.1, 12.40n 1.1, 12.41n 1.1, 25.60n 1.1)
+*VA4 A4 0 PWL(0.00n 0.0, 0.00n 0.0, 0.01n 0.0, 0.40n 0.0, 0.41n 0.0, 0.80n 0.0, 0.81n 0.0, 1.20n 0.0, 1.21n 0.0, 1.60n 0.0, 1.61n 1.1, 2.00n 1.1, 2.01n 1.1, 2.40n 1.1, 2.41n 1.1, 2.80n 1.1, 2.81n 1.1, 3.20n 1.1, 3.21n 0.0, 3.60n 0.0, 3.61n 0.0, 4.00n 0.0, 4.01n 0.0, 4.40n 0.0, 4.41n 0.0, 4.80n 0.0, 4.81n 1.1, 5.20n 1.1, 5.21n 1.1, 5.60n 1.1, 5.61n 1.1, 6.00n 1.1, 6.01n 1.1, 6.40n 1.1, 6.41n 0.0, 6.80n 0.0, 6.81n 0.0, 7.20n 0.0, 7.21n 0.0, 7.60n 0.0, 7.61n 0.0, 8.00n 0.0, 8.01n 1.1, 8.40n 1.1, 8.41n 1.1, 8.80n 1.1, 8.81n 1.1, 9.20n 1.1, 9.21n 1.1, 9.60n 1.1, 9.61n 0.0, 10.00n 0.0, 10.01n 0.0, 10.40n 0.0, 10.41n 0.0, 10.80n 0.0, 10.81n 0.0, 11.20n 0.0, 11.21n 1.1, 11.60n 1.1, 11.61n 1.1, 12.00n 1.1, 12.01n 1.1, 12.40n 1.1, 12.41n 1.1, 25.60n 1.1)
+*VA5 A5 0 PWL(0.00n 0.0, 0.00n 0.0, 0.01n 0.0, 0.40n 0.0, 0.41n 0.0, 0.80n 0.0, 0.81n 0.0, 1.20n 0.0, 1.21n 0.0, 1.60n 0.0, 1.61n 1.1, 2.00n 1.1, 2.01n 1.1, 2.40n 1.1, 2.41n 1.1, 2.80n 1.1, 2.81n 1.1, 3.20n 1.1, 3.21n 0.0, 3.60n 0.0, 3.61n 0.0, 4.00n 0.0, 4.01n 0.0, 4.40n 0.0, 4.41n 0.0, 4.80n 0.0, 4.81n 1.1, 5.20n 1.1, 5.21n 1.1, 5.60n 1.1, 5.61n 1.1, 6.00n 1.1, 6.01n 1.1, 6.40n 1.1, 6.41n 0.0, 6.80n 0.0, 6.81n 0.0, 7.20n 0.0, 7.21n 0.0, 7.60n 0.0, 7.61n 0.0, 8.00n 0.0, 8.01n 1.1, 8.40n 1.1, 8.41n 1.1, 8.80n 1.1, 8.81n 1.1, 9.20n 1.1, 9.21n 1.1, 9.60n 1.1, 9.61n 0.0, 10.00n 0.0, 10.01n 0.0, 10.40n 0.0, 10.41n 0.0, 10.80n 0.0, 10.81n 0.0, 11.20n 0.0, 11.21n 1.1, 11.60n 1.1, 11.61n 1.1, 12.00n 1.1, 12.01n 1.1, 12.40n 1.1, 12.41n 1.1, 25.60n 1.1)
+*.end

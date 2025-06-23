@@ -1,0 +1,183 @@
+.title sram_array
+
+.PARAM res = 0
+.PARAM cap = 0
+
+.PARAM p12w = 120n
+.PARAM a12w = 180n
+.PARAM n12w = 240n
+
+.ic V(Xcell_0_2.bl_in) = 0V
+
+.OPTIONS POST BRIEF
+.OP
+.LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+.GLOBAL gnd vdd_0
+
+.include 'amp'
+.include '6bit_select'
+
+.subckt sram_and2 A B out VDD GND
+XP1 net_nand A VDD VDD p11ll_ckt W=600n L=40n
+XP2 net_nand B VDD VDD p11ll_ckt W=600n L=40n
+XN1 net_nand A net1 GND n11ll_ckt W=180n L=40n
+XN2 net1 B GND GND n11ll_ckt W=120n L=40n
+XINV net_nand out VDD GND inv
+.ends
+
+.subckt inv vi vo vdd vss
+XP vo vi vdd vdd p11ll_ckt w=450n l=40n $ PMOS
+XN vo vi vss vss n11ll_ckt w=300n l=40n $ NMOS
+.ends inv
+
+*       m0         m1
+*   m4                  m5
+*       m2         m3
+.subckt sram_cell bl blb vddi vddsd vssi wl
+Xm0 vddsd blb_in bl_in vddi p11ll_ckt w=p12w l=40n
+Xm1 vddsd bl_in blb_in vddi p11ll_ckt w=p12w l=40n
+Xm2 bl_in blb_in vssi vssi n11ll_ckt w=n12w l=40n
+Xm3 blb_in bl_in vssi vssi n11ll_ckt w=n12w l=40n
+Xm4 bl wl bl_in vssi n11ll_ckt w=a12w l=40n
+Xm5 blb wl blb_in vssi n11ll_ckt w=a12w l=40n
+.ends sram_cell
+
+
+.subckt write_driver vdd vss din wre bl blb
+xi0 din net0 vdd vss inv
+xi1 wre net1 vdd vss inv
+Xm6 vdd net0 net2 vdd p11ll_ckt w=330n l=40n
+Xm7 vdd din net3 vdd p11ll_ckt w=330n l=40n
+Xm8 net2 net1 bl vdd p11ll_ckt w=330n l=40n
+Xm9 net3 net1 blb vdd p11ll_ckt w=330n l=40n
+Xm10 bl wre net4 vss n11ll_ckt w=280n l=40n
+Xm11 blb wre net5 vss n11ll_ckt w=280n l=40n
+Xm12 net4 net0 vss vss n11ll_ckt w=280n l=40n
+Xm13 net5 din vss vss n11ll_ckt w=280n l=40n
+.ends write_driver
+
+.subckt precharge_circuit bl blb vdd precharge
+Xm14 blb precharge bl vdd p11ll_ckt w=330n l=40n
+Xm15 blb precharge bl vdd p11ll_ckt w=330n l=40n
+Xm16 blb precharge bl vdd p11ll_ckt w=330n l=40n
+.ends precharge_circuit
+
+
+.subckt sram_raw bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl vdd gnd
+Xcell_0 bl_0 blb_0 vdd vdd gnd wl sram_cell
+Xcell_1 bl_1 blb_1 vdd vdd gnd wl sram_cell
+Xcell_2 bl_2 blb_2 vdd vdd gnd wl sram_cell
+Xcell_3 bl_3 blb_3 vdd vdd gnd wl sram_cell
+Xcell_4 bl_4 blb_4 vdd vdd gnd wl sram_cell
+Xcell_5 bl_5 blb_5 vdd vdd gnd wl sram_cell
+Xcell_6 bl_6 blb_6 vdd vdd gnd wl sram_cell
+Xcell_7 bl_7 blb_7 vdd vdd gnd wl sram_cell
+.ends
+
+
+.subckt sram_array bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_0 wl_1 wl_2 wl_3 wl_4 wl_5 wl_6 wl_7 wl_8 wl_9 wl_10 wl_11 wl_12 wl_13 wl_14 wl_15 wl_16 wl_17 wl_18 wl_19 wl_20 wl_21 wl_22 wl_23 wl_24 wl_25 wl_26 wl_27 wl_28 wl_29 wl_30 wl_31 wl_32 wl_33 wl_34 wl_35 wl_36 wl_37 wl_38 wl_39 wl_40 wl_41 wl_42 wl_43 wl_44 wl_45 wl_46 wl_47 wl_48 wl_49 wl_50 wl_51 wl_52 wl_53 wl_54 wl_55 wl_56 wl_57 wl_58 wl_59 wl_60 wl_61 wl_62 wl_63 vdd gnd
+Xsram_raw_0 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_0 vdd gnd sram_raw
+Xsram_raw_1 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_1 vdd gnd sram_raw
+Xsram_raw_2 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_2 vdd gnd sram_raw
+Xsram_raw_3 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_3 vdd gnd sram_raw
+Xsram_raw_4 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_4 vdd gnd sram_raw
+Xsram_raw_5 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_5 vdd gnd sram_raw
+Xsram_raw_6 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_6 vdd gnd sram_raw
+Xsram_raw_7 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_7 vdd gnd sram_raw
+Xsram_raw_8 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_8 vdd gnd sram_raw
+Xsram_raw_9 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_9 vdd gnd sram_raw
+Xsram_raw_10 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_10 vdd gnd sram_raw
+Xsram_raw_11 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_11 vdd gnd sram_raw
+Xsram_raw_12 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_12 vdd gnd sram_raw
+Xsram_raw_13 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_13 vdd gnd sram_raw
+Xsram_raw_14 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_14 vdd gnd sram_raw
+Xsram_raw_15 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_15 vdd gnd sram_raw
+Xsram_raw_16 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_16 vdd gnd sram_raw
+Xsram_raw_17 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_17 vdd gnd sram_raw
+Xsram_raw_18 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_18 vdd gnd sram_raw
+Xsram_raw_19 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_19 vdd gnd sram_raw
+Xsram_raw_20 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_20 vdd gnd sram_raw
+Xsram_raw_21 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_21 vdd gnd sram_raw
+Xsram_raw_22 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_22 vdd gnd sram_raw
+Xsram_raw_23 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_23 vdd gnd sram_raw
+Xsram_raw_24 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_24 vdd gnd sram_raw
+Xsram_raw_25 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_25 vdd gnd sram_raw
+Xsram_raw_26 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_26 vdd gnd sram_raw
+Xsram_raw_27 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_27 vdd gnd sram_raw
+Xsram_raw_28 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_28 vdd gnd sram_raw
+Xsram_raw_29 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_29 vdd gnd sram_raw
+Xsram_raw_30 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_30 vdd gnd sram_raw
+Xsram_raw_31 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_31 vdd gnd sram_raw
+Xsram_raw_32 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_32 vdd gnd sram_raw
+Xsram_raw_33 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_33 vdd gnd sram_raw
+Xsram_raw_34 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_34 vdd gnd sram_raw
+Xsram_raw_35 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_35 vdd gnd sram_raw
+Xsram_raw_36 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_36 vdd gnd sram_raw
+Xsram_raw_37 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_37 vdd gnd sram_raw
+Xsram_raw_38 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_38 vdd gnd sram_raw
+Xsram_raw_39 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_39 vdd gnd sram_raw
+Xsram_raw_40 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_40 vdd gnd sram_raw
+Xsram_raw_41 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_41 vdd gnd sram_raw
+Xsram_raw_42 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_42 vdd gnd sram_raw
+Xsram_raw_43 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_43 vdd gnd sram_raw
+Xsram_raw_44 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_44 vdd gnd sram_raw
+Xsram_raw_45 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_45 vdd gnd sram_raw
+Xsram_raw_46 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_46 vdd gnd sram_raw
+Xsram_raw_47 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_47 vdd gnd sram_raw
+Xsram_raw_48 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_48 vdd gnd sram_raw
+Xsram_raw_49 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_49 vdd gnd sram_raw
+Xsram_raw_50 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_50 vdd gnd sram_raw
+Xsram_raw_51 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_51 vdd gnd sram_raw
+Xsram_raw_52 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_52 vdd gnd sram_raw
+Xsram_raw_53 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_53 vdd gnd sram_raw
+Xsram_raw_54 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_54 vdd gnd sram_raw
+Xsram_raw_55 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_55 vdd gnd sram_raw
+Xsram_raw_56 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_56 vdd gnd sram_raw
+Xsram_raw_57 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_57 vdd gnd sram_raw
+Xsram_raw_58 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_58 vdd gnd sram_raw
+Xsram_raw_59 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_59 vdd gnd sram_raw
+Xsram_raw_60 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_60 vdd gnd sram_raw
+Xsram_raw_61 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_61 vdd gnd sram_raw
+Xsram_raw_62 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_62 vdd gnd sram_raw
+Xsram_raw_63 bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_63 vdd gnd sram_raw
+.ends
+
+.subckt sram A0 A1 A2 A3 A4 A5 precharge clk wre din_0 din_1 din_2 din_3 din_4 din_5 din_6 din_7 out_0 out_1 out_2 out_3 out_4 out_5 out_6 out_7 vdd_0 gnd
+
+* 写驱动
+Xwrite_driver_0 vdd_0 gnd din_0 wre bl_0 blb_0 write_driver
+Xwrite_driver_1 vdd_0 gnd din_1 wre bl_1 blb_1 write_driver
+Xwrite_driver_2 vdd_0 gnd din_2 wre bl_2 blb_2 write_driver
+Xwrite_driver_3 vdd_0 gnd din_3 wre bl_3 blb_3 write_driver
+Xwrite_driver_4 vdd_0 gnd din_4 wre bl_4 blb_4 write_driver
+Xwrite_driver_5 vdd_0 gnd din_5 wre bl_5 blb_5 write_driver
+Xwrite_driver_6 vdd_0 gnd din_6 wre bl_6 blb_6 write_driver
+Xwrite_driver_7 vdd_0 gnd din_7 wre bl_7 blb_7 write_driver
+*运放
+Xamp_0 bl_0 blb_0 clk out_0 vdd_0 gnd amp
+Xamp_1 bl_1 blb_1 clk out_1 vdd_0 gnd amp
+Xamp_2 bl_2 blb_2 clk out_2 vdd_0 gnd amp
+Xamp_3 bl_3 blb_3 clk out_3 vdd_0 gnd amp
+Xamp_4 bl_4 blb_4 clk out_4 vdd_0 gnd amp
+Xamp_5 bl_5 blb_5 clk out_5 vdd_0 gnd amp
+Xamp_6 bl_6 blb_6 clk out_6 vdd_0 gnd amp
+Xamp_7 bl_7 blb_7 clk out_7 vdd_0 gnd amp
+*片选 A0 A1 A2 000-0 001-1
+Xsram_select A0 A1 A2 A3 A4 A5 wl_0 wl_1 wl_2 wl_3 wl_4 wl_5 wl_6 wl_7 wl_8 wl_9 wl_10 wl_11 wl_12 wl_13 wl_14 wl_15 wl_16 wl_17 wl_18 wl_19 wl_20 wl_21 wl_22 wl_23 wl_24 wl_25 wl_26 wl_27 wl_28 wl_29 wl_30 wl_31 wl_32 wl_33 wl_34 wl_35 wl_36 wl_37 wl_38 wl_39 wl_40 wl_41 wl_42 wl_43 wl_44 wl_45 wl_46 wl_47 wl_48 wl_49 wl_50 wl_51 wl_52 wl_53 wl_54 wl_55 wl_56 wl_57 wl_58 wl_59 wl_60 wl_61 wl_62 wl_63 vdd_0 gnd sram_6select64
+*使能锁定
+
+*充电
+Xprecharge_0 bl_0 blb_0 vdd_0 precharge precharge_circuit
+Xprecharge_1 bl_1 blb_1 vdd_0 precharge precharge_circuit
+Xprecharge_2 bl_2 blb_2 vdd_0 precharge precharge_circuit
+Xprecharge_3 bl_3 blb_3 vdd_0 precharge precharge_circuit
+Xprecharge_4 bl_4 blb_4 vdd_0 precharge precharge_circuit
+Xprecharge_5 bl_5 blb_5 vdd_0 precharge precharge_circuit
+Xprecharge_6 bl_6 blb_6 vdd_0 precharge precharge_circuit
+Xprecharge_7 bl_7 blb_7 vdd_0 precharge precharge_circuit
+*主阵列
+Xsram_array bl_0 blb_0 bl_1 blb_1 bl_2 blb_2 bl_3 blb_3 bl_4 blb_4 bl_5 blb_5 bl_6 blb_6 bl_7 blb_7 wl_0 wl_1 wl_2 wl_3 wl_4 wl_5 wl_6 wl_7 wl_8 wl_9 wl_10 wl_11 wl_12 wl_13 wl_14 wl_15 wl_16 wl_17 wl_18 wl_19 wl_20 wl_21 wl_22 wl_23 wl_24 wl_25 wl_26 wl_27 wl_28 wl_29 wl_30 wl_31 wl_32 wl_33 wl_34 wl_35 wl_36 wl_37 wl_38 wl_39 wl_40 wl_41 wl_42 wl_43 wl_44 wl_45 wl_46 wl_47 wl_48 wl_49 wl_50 wl_51 wl_52 wl_53 wl_54 wl_55 wl_56 wl_57 wl_58 wl_59 wl_60 wl_61 wl_62 wl_63 vdd_0 gnd sram_array
+.ends
+
+.END

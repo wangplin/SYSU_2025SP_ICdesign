@@ -28,6 +28,16 @@ Xinv_0 S S_bar vdd vss inv
 * Minv_1 F_bar F vdd vss inv
 .ends mux2_1
 
+.subckt bit3_2mux1 S A_2 A_1 A_0 B_2 B_1 B_0 vdd vss F_bar_2 F_bar_1 F_bar_0 
+Xmux2_1_0 A_0 B_0 S F_bar_0 vdd vss mux2_1
+Xmux2_1_1 A_1 B_1 S F_bar_1 vdd vss mux2_1
+Xmux2_1_2 A_2 B_2 S F_bar_2 vdd vss mux2_1
+.ends bit3_2mux1
+
+
+
+
+
 
 
 
@@ -86,14 +96,14 @@ XAND_OR_GATE_7 A_7 B_7 Y_7 vss vss vss vdd vdd vss AND_OR_GATE
 
 * XALU_AND_0 A_0 A_1 A_2 A_3 A_4 A_5 A_6 A_7 B_0 B_1 B_2 B_3 B_4 B_5 B_6 B_7 Y_0 Y_1 Y_2 Y_3 Y_4 Y_5 Y_6 Y_7 vdd vss ALU_AND
 
-.MEASURE TRAN Y_0 MAX V(Y_0) FROM=3n TO=4n
-.MEASURE TRAN Y_1 MAX V(Y_1) FROM=3n TO=4n
-.MEASURE TRAN Y_2 MAX V(Y_2) FROM=3n TO=4n
-.MEASURE TRAN Y_3 MAX V(Y_3) FROM=3n TO=4n
-.MEASURE TRAN Y_4 MAX V(Y_4) FROM=3n TO=4n
-.MEASURE TRAN Y_5 MAX V(Y_5) FROM=3n TO=4n
-.MEASURE TRAN Y_6 MAX V(Y_6) FROM=3n TO=4n
-.MEASURE TRAN Y_7 MAX V(Y_7) FROM=3n TO=4n
+* .MEASURE TRAN Y_0 MAX V(Y_0) FROM=3n TO=4n
+* .MEASURE TRAN Y_1 MAX V(Y_1) FROM=3n TO=4n
+* .MEASURE TRAN Y_2 MAX V(Y_2) FROM=3n TO=4n
+* .MEASURE TRAN Y_3 MAX V(Y_3) FROM=3n TO=4n
+* .MEASURE TRAN Y_4 MAX V(Y_4) FROM=3n TO=4n
+* .MEASURE TRAN Y_5 MAX V(Y_5) FROM=3n TO=4n
+* .MEASURE TRAN Y_6 MAX V(Y_6) FROM=3n TO=4n
+* .MEASURE TRAN Y_7 MAX V(Y_7) FROM=3n TO=4n
 
 .END
 

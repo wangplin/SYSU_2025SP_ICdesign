@@ -1,0 +1,372 @@
+.title FSM
+
+
+.OPTIONS POST BRIEF
+.OP
+.LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+.GLOBAL vss vdd
+
+* v0 vss 0 DC=0
+* v1 vdd vss DC=1.1
+
+* .include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/ALU/TWOMUX/TWOMUX'
+
+* .include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/ALU/AND/and'
+
+* .include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/Reg/reg.sp'
+
+.subckt inv vi vo vdd vss
+XP vo vi vdd vdd p11ll_ckt w=330n l=40n $ PMOS
+XN vo vi vss vss n11ll_ckt w=280n l=40n $ NMOS
+.ends inv
+
+* State definitions
+* S0 000
+* S1 001
+* S2 010
+* S3 011
+* S4 100
+* S5 101
+* S6 110
+
+
+* Opcode definitions
+
+* AND   000
+* OR    001
+* ADD   010
+
+* LOAD  100
+* STORE 101
+* SUB   110
+* NOT   111
+
+
+* State transitions
+
+
+* case (current_state)
+
+
+* S0:   next_state = S1;
+
+
+* S1:   if (OP == LOAD) next_state = S2;    else if (OP == STORE) next_state = S4;  else next_state = S5;
+
+* S2:   next_state = S3;
+
+* S3:   next_state = S0;
+
+* S4:   next_state = S0;
+
+* S5:   next_state = S6;
+
+* S6:   next_state = S0;
+
+* endcase
+
+
+* State definitions
+* S0 000
+* S1 001
+* S2 010
+* S3 011
+* S4 100
+* S5 101
+* S6 110
+
+
+*       cur_state_2 cur_state_1 cur_state_0 
+* S0:   vss         vss         vss
+* S1:   vss         vss         vdd
+* S2:   vss         vdd         vss
+* S3:   vss         vdd         vdd
+* S4:   vdd         vss         vss
+* S5:   vdd         vss         vdd
+* S6:   vdd         vdd         vss
+
+
+.subckt state_control cur_state_0 cur_state_1 cur_state_2 next_state_0 next_state_1 next_state_2 op_0 op_1 op_2 vdd vss
+* op_0 = 1, S4;  op_0 = 0, S2: 
+Xbit3_2mux1_0 op_0
++ vdd vss vss
++ vss vdd vss
++ vdd vss
++ S4_S2_2 S4_S2_1 S4_S2_0 
++ bit3_2mux1
+
+Xinv_op_1 op_1 op_1_bar vdd vss inv
+
+XAND_0 op_1_bar op_2 op_1_bar_2_and vss vss vss vdd vdd vss AND_OR_GATE
+
+* op_1_bar_2_and = 1 S4_S2;  op_1_bar_2_and = 0 S5: 
+Xbit3_2mux1_1 op_1_bar_2_and
++ S4_S2_2 S4_S2_1 S4_S2_0
++ vdd vss vdd
++ vdd vss 
++ S5_S4_S2_2 S5_S4_S2_1 S5_S4_S2_0 
++ bit3_2mux1
+
+* cur_state_2 = 1, not care;  cur_state_2 = 0, S0: 
+Xbit3_2mux1_2 cur_state_2
++ vdd vdd vdd 
++ vss vss vss
++ vdd vss 
++ cur_state_x11_2 cur_state_x11_1 cur_state_x11_0
++ bit3_2mux1
+
+* cur_state_2 = 1, S6;  cur_state_2 = 0, S5_S4_S2: 
+Xbit3_2mux1_3 cur_state_2
++ vdd vdd vss
++ S5_S4_S2_2 S5_S4_S2_1 S5_S4_S2_0
++ vdd vss 
++ cur_state_x01_2 cur_state_x01_1 cur_state_x01_0
++ bit3_2mux1
+
+* cur_state_2 = 1, S0;  cur_state_2 = 0, S3: 
+Xbit3_2mux1_4 cur_state_2
++ vss vss vss
++ vss vdd vdd
++ vdd vss 
++ cur_state_x10_2 cur_state_x10_1 cur_state_x10_0
++ bit3_2mux1
+
+* cur_state_2 = 1, S0;  cur_state_2 = 0, S1: 
+Xbit3_2mux1_5 cur_state_2
++ vss vss vss
++ vss vss vdd
++ vdd vss 
++ cur_state_x00_2 cur_state_x00_1 cur_state_x00_0
++ bit3_2mux1
+
+Xbit3_2mux1_6 cur_state_1
++ cur_state_x11_2 cur_state_x11_1 cur_state_x11_0
++ cur_state_x01_2 cur_state_x01_1 cur_state_x01_0
++ vdd vss 
++ cur_state_xx1_2 cur_state_xx1_1 cur_state_xx1_0
++ bit3_2mux1
+
+Xbit3_2mux1_7 cur_state_1
++ cur_state_x10_2 cur_state_x10_1 cur_state_x10_0
++ cur_state_x00_2 cur_state_x00_1 cur_state_x00_0
++ vdd vss 
++ cur_state_xx0_2 cur_state_xx0_1 cur_state_xx0_0
++ bit3_2mux1
+
+Xbit3_2mux1_8 cur_state_0
++ cur_state_xx1_2 cur_state_xx1_1 cur_state_xx1_0
++ cur_state_xx0_2 cur_state_xx0_1 cur_state_xx0_0
++ vdd vss 
++ next_state_2 next_state_1 next_state_0
++ bit3_2mux1
+.ends state_control
+
+
+
+
+* Xstate_reg vdd vss clk clk_bar vdd vss
+* + next_state_2 next_state_1 next_state_0
+* + cur_state_2 cur_state_1 cur_state_0
+* + reg_array_
+
+
+
+
+.subckt control_signal cur_state_0 cur_state_1 cur_state_2 
++ instr_en reg_write alu_result mem_write mem2reg
++ vdd vss
+
+* Instr_en
+Xinv_cur_state_0 cur_state_0 cur_state_0_bar vdd vss inv
+Xinv_cur_state_1 cur_state_1 cur_state_1_bar vdd vss inv
+Xinv_cur_state_2 cur_state_2 cur_state_2_bar vdd vss inv
+XAND_0 cur_state_0_bar cur_state_1_bar cur_state_0bar_1bar_and vss vss vss vdd vdd vss AND_OR_GATE
+XAND_1 cur_state_0bar_1bar_and cur_state_2_bar cur_state_0bar_1bar_2bar_and vss vss vss vdd vdd vss AND_OR_GATE
+XInstr_en vss vdd cur_state_0bar_1bar_2bar_and instr_en vdd vss mux2_1
+
+* Reg write
+XAND_2 cur_state_0_bar cur_state_2 cur_state_0bar_2_and vss vss vss vdd vdd vss AND_OR_GATE
+XAND_3 cur_state_2_bar cur_state_0 cur_state_0_2bar_and vss vss vss vdd vdd vss AND_OR_GATE
+XOR_0 cur_state_0bar_2_and cur_state_0_2bar_and cur_state_0_bar_2_or_0_bar_2_or vss vdd vdd vdd vdd vss AND_OR_GATE
+XAND_4 cur_state_0_bar_2_or_0_bar_2_or cur_state_1 cur_state_0_bar_2_or_0_bar_2_or_1_and vss vss vss vdd vdd vss AND_OR_GATE
+XRegwrite vss vdd cur_state_0_bar_2_or_0_bar_2_or_1_and reg_write vdd vss mux2_1
+
+* ALU result
+XAND_5 cur_state_0_bar cur_state_1 cur_state_0bar_1_and vss vss vss vdd vdd vss AND_OR_GATE
+XAND_6 cur_state_0bar_1_and cur_state_2_bar cur_state_0bar_1_2bar_and vss vss vss vdd vdd vss AND_OR_GATE
+XALU_result vss vdd cur_state_0bar_1_2bar_and alu_result vdd vss mux2_1
+
+* Mem write
+XAND_7 cur_state_0_bar cur_state_1_bar cur_state_0bar_1_bar_and vss vss vss vdd vdd vss AND_OR_GATE
+XAND_8 cur_state_0bar_1_bar_and cur_state_2 cur_state_0bar_1bar_2_and vss vss vss vdd vdd vss AND_OR_GATE
+XMem_write vss vdd cur_state_0bar_1bar_2_and mem_write vdd vss mux2_1
+
+* Mem2reg
+XAND_9 cur_state_0_bar cur_state_1 cur_state_0bar_1_and vss vss vss vdd vdd vss AND_OR_GATE
+XAND_10 cur_state_0bar_1_and cur_state_2 cur_state_0bar_1_2_and vss vss vss vdd vdd vss AND_OR_GATE
+XMem2reg vss vdd cur_state_0bar_1_2_and mem2reg vdd vss mux2_1
+
+.ends
+
+
+
+
+
+
+
+.TRAN 1e-9 20e-9 START=0.0
+
+
+* Test case for state_control
+
+
+* Xstate_control cur_state_0 cur_state_1 cur_state_2 next_state_0 next_state_1 next_state_2 op_0 op_1 op_2 vdd vss state_control
+
+
+
+
+
+* .IC v(next_state_0)=0 v(next_state_1)=0 v(next_state_2)=0 
+
+
+* S0 000 --- > S1 001
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 0)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 0)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 0)
+* Vop_0 op_0 0 pwl (0n 0 0.01n 0)
+* Vop_1 op_1 0 pwl (0n 0 0.01n 0)
+* Vop_2 op_2 0 pwl (0n 0 0.01n 0)
+
+
+* S1
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 1)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 0)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 0)
+
+* LOAD 100 --- > S2 010
+* Vop_0 op_0 0 pwl (0n 0 0.01n 0)
+* Vop_1 op_1 0 pwl (0n 0 0.01n 0)
+* Vop_2 op_2 0 pwl (0n 0 0.01n 1)
+* STORE 101 --- > S4 100
+* Vop_0 op_0 0 pwl (0n 0 0.01n 1)
+* Vop_1 op_1 0 pwl (0n 0 0.01n 0)
+* Vop_2 op_2 0 pwl (0n 0 0.01n 1)
+
+* Other --- > S5 101
+* Vop_0 op_0 0 pwl (0n 0 0.01n 1)
+* Vop_1 op_1 0 pwl (0n 0 0.01n 1)
+* Vop_2 op_2 0 pwl (0n 0 0.01n 0)
+
+* S2 010 --- > S3 011
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 0)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 1)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 0)
+
+* S3 011 --- > S0 000
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 1)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 1)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 0)
+
+* S4 100 --- > S0 000
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 0)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 0)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 1)
+
+* S5 101 --- > S6 110
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 1)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 0)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 1)
+
+* S6 110 --- > S0 000
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 0)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 1)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 1)
+
+
+* .MEASURE TRAN next_state_2 MAX V(next_state_2) FROM=3n TO=4n
+* .MEASURE TRAN next_state_1 MAX V(next_state_1) FROM=3n TO=4n
+* .MEASURE TRAN next_state_0 MAX V(next_state_0) FROM=3n TO=4n
+
+
+* Test case for control_signal
+
+* Xcontrol_signal cur_state_0 cur_state_1 cur_state_2 
+* + instr_en reg_write alu_result mem_write mem2reg
+* + vdd vss
+* + control_signal
+
+
+* S0 
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 0)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 0)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 0)
+
+* S1
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 1)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 0)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 0)
+
+* * S2
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 0)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 1)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 0)
+
+* * S3        
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 1)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 1)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 0)   
+
+* * S4
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 0)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 0)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 1)
+
+* * S5
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 1)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 0)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 1)
+
+* * S6
+* Vcur_state_0 cur_state_0 0 pwl (0n 0 0.01n 0)
+* Vcur_state_1 cur_state_1 0 pwl (0n 0 0.01n 1)
+* Vcur_state_2 cur_state_2 0 pwl (0n 0 0.01n 1)
+
+* .IC v(instr_en)=0 v(reg_write)=0 v(alu_result)=0 v(mem_write)=0 v(mem2reg)=0
+
+
+
+* .MEASURE TRAN instr_en MAX V(instr_en) FROM=3n TO=4n
+* .MEASURE TRAN reg_write MAX V(reg_write) FROM=3n TO=4n
+* .MEASURE TRAN alu_result MAX V(alu_result) FROM=3n TO=4n
+* .MEASURE TRAN mem_write MAX V(mem_write) FROM=3n TO=4n
+* .MEASURE TRAN mem2reg MAX V(mem2reg) FROM=3n TO=4n
+
+
+
+
+
+.END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

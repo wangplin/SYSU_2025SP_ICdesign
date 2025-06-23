@@ -7,8 +7,8 @@
 .TEMP 25
 .GLOBAL vss vdd
 
-v0 vss 0 DC=0
-v1 vdd vss DC=1.1
+* v0 vss 0 DC=0
+* v1 vdd vss DC=1.1
 
 
 .include 'AND/and'

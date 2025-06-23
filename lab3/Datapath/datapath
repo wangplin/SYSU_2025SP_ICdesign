@@ -1,0 +1,190 @@
+.title datapath
+
+
+.OPTIONS POST BRIEF
+.OP
+.LIB "/home/wangpl/smic40_oa/smic40ll_1125_1tm_oa_cds_1P9M_2012_10_11_v1.4/models/hspice/l0040ll_v1p4_1r.lib" tt
+.TEMP 25
+.GLOBAL vss vdd
+
+
+* v0 vss 0 DC=0
+* v1 vdd vss DC=1.1
+
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/ALU/alu'
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/Reg/reg.sp'
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/SRAM/sram_array'
+.include '/home/wangpl/Projects/Digital_lab_2025spring/lab4/ALU/TWOMUX/TWOMUX'
+
+
+.subckt inv vi vo vdd vss
+XP vo vi vdd vdd p11ll_ckt w=330n l=40n $ PMOS
+XN vo vi vss vss n11ll_ckt w=280n l=40n $ NMOS
+.ends inv
+
+
+
+
+.subckt datapath clk instr_8 instr_7 instr_6 instr_5 instr_4 instr_3 instr_2 instr_1 instr_0 OP_2 OP_1 OP_0
++ Instr_en regfile_WE3 ALUResult MemWrite MemtoReg 
++ precharge
++ reset_n
++ vdd vss
+
+
+
+Xinv_clk clk clk_bar vdd vss inv
+
+
+* Instr_en 低复位有效
+Xinstr_reg vdd vss clk clk_bar reset_n Instr_en 
++ instr_8 instr_7 instr_6 instr_5 instr_4 instr_3 instr_2 instr_1 instr_0
++ regfile_A3_1 regfile_A3_0 regfile_A2_1 regfile_A2_0 regfile_A1_1 regfile_A1_0 OP_2 OP_1 OP_0
++ reg_array_9
+
+
+XReg_file vdd vss clk clk_bar reset_n regfile_WE3
++ regfile_A3_1 regfile_A3_0
++ regfile_WD3_7 regfile_WD3_6 regfile_WD3_5 regfile_WD3_4 regfile_WD3_3 regfile_WD3_2 regfile_WD3_1 regfile_WD3_0 
++ regfile_A1_1 regfile_A1_0
++ regfile_RD1_7 regfile_RD1_6 regfile_RD1_5 regfile_RD1_4 regfile_RD1_3 regfile_RD1_2 regfile_RD1_1 regfile_RD1_0 
++ regfile_A2_1  regfile_A2_0
++ regfile_RD2_7 regfile_RD2_6 regfile_RD2_5 regfile_RD2_4 regfile_RD2_3 regfile_RD2_2 regfile_RD2_1 regfile_RD2_0 
++ reg_file
+
+
+XRD1_reg vdd vss clk clk_bar reset_n vss 
++ regfile_RD1_7 regfile_RD1_6 regfile_RD1_5 regfile_RD1_4 regfile_RD1_3 regfile_RD1_2 regfile_RD1_1 regfile_RD1_0 
++ regfile_RD1_7_out regfile_RD1_6_out regfile_RD1_5_out regfile_RD1_4_out regfile_RD1_3_out regfile_RD1_2_out regfile_RD1_1_out regfile_RD1_0_out 
++ reg_array_8
+
+
+XRD2_reg vdd vss clk clk_bar reset_n vss 
++ regfile_RD2_7 regfile_RD2_6 regfile_RD2_5 regfile_RD2_4 regfile_RD2_3 regfile_RD2_2 regfile_RD2_1 regfile_RD2_0 
++ regfile_RD2_7_out regfile_RD2_6_out regfile_RD2_5_out regfile_RD2_4_out regfile_RD2_3_out regfile_RD2_2_out regfile_RD2_1_out regfile_RD2_0_out 
++ reg_array_8
+
+
+* * ALUSrcA 为 1 选择 regfile_RD1_0_out； 为0 选择 PC_0
+* XALUsrcA ALUSrcA 
+* + regfile_RD1_0_out PC_0 
+* + regfile_RD1_1_out PC_1
+* + regfile_RD1_2_out PC_2 
+* + regfile_RD1_3_out PC_3
+* + regfile_RD1_4_out PC_4
+* + regfile_RD1_5_out PC_5
+* + regfile_RD1_6_out PC_6
+* + regfile_RD1_7_out PC_7
+* + vdd vss 
+* + alu_srcA_0 alu_srcA_1 alu_srcA_2 alu_srcA_3 alu_srcA_4 alu_srcA_5 alu_srcA_6 alu_srcA_7
+* + alu_2mux1
+
+
+* * ALUSrcB 为 1 选择 vdd； 为0 选择 regfile_RD2_0_out
+* XALUsrcB ALUSrcB 
+* + vdd regfile_RD2_0_out
+* + vdd regfile_RD2_1_out
+* + vdd regfile_RD2_2_out
+* + vdd regfile_RD2_3_out
+* + vdd regfile_RD2_4_out
+* + vdd regfile_RD2_5_out
+* + vdd regfile_RD2_6_out
+* + vdd regfile_RD2_7_out
+* + vdd vss 
+* + alu_srcB_0 alu_srcB_1 alu_srcB_2 alu_srcB_3 alu_srcB_4 alu_srcB_5 alu_srcB_6 alu_srcB_7
+* + alu_2mux1
+
+
+* XALU 
+* + alu_srcA_0 alu_srcA_1 alu_srcA_2 alu_srcA_3 alu_srcA_4 alu_srcA_5 alu_srcA_6 alu_srcA_7 
+* + alu_srcB_0 alu_srcB_1 alu_srcB_2 alu_srcB_3 alu_srcB_4 alu_srcB_5 alu_srcB_6 alu_srcB_7 
+* + alu_F_0  alu_F_1  alu_F_2  
+* + alu_S_0  alu_S_1  alu_S_2  alu_S_3  alu_S_4  alu_S_5  alu_S_6  alu_S_7 
+* + Cout vdd vss 
+* + alu
+
+
+XALU 
++ regfile_RD1_0_out regfile_RD1_1_out regfile_RD1_2_out regfile_RD1_3_out regfile_RD1_4_out regfile_RD1_5_out regfile_RD1_6_out regfile_RD1_7_out 
++ regfile_RD2_0_out regfile_RD2_1_out regfile_RD2_2_out regfile_RD2_3_out regfile_RD2_4_out regfile_RD2_5_out regfile_RD2_6_out regfile_RD2_7_out
++ OP_0 OP_1 OP_2
++ alu_S_0  alu_S_1  alu_S_2  alu_S_3  alu_S_4  alu_S_5  alu_S_6  alu_S_7 
++ Cout vdd vss 
++ alu
+
+
+XResult_reg vdd vss clk clk_bar reset_n vss 
++ alu_S_7 alu_S_6 alu_S_5 alu_S_4 alu_S_3 alu_S_2 alu_S_1 alu_S_0
++ alu_S_7_out alu_S_6_out alu_S_5_out alu_S_4_out alu_S_3_out alu_S_2_out alu_S_1_out alu_S_0_out
++ reg_array_8
+
+
+
+XALUResult ALUResult
++ alu_S_0_out regfile_RD1_0_out
++ alu_S_1_out regfile_RD1_1_out
++ alu_S_2_out regfile_RD1_2_out
++ alu_S_3_out regfile_RD1_3_out
++ alu_S_4_out regfile_RD1_4_out
++ alu_S_5_out regfile_RD1_5_out
++ alu_S_6_out regfile_RD1_6_out
++ alu_S_7_out regfile_RD1_7_out
++ vdd vss 
++ alu_res_0 alu_res_1 alu_res_2 alu_res_3 alu_res_4 alu_res_5 alu_res_6 alu_res_7
++ alu_2mux1
+
+
+
+
+* precharge 为 0 时充电
+XMem 
++ alu_res_0 alu_res_1 alu_res_2 alu_res_3 alu_res_4 alu_res_5
++ precharge
++ clk
++ MemWrite
++ regfile_RD2_0_out regfile_RD2_1_out regfile_RD2_2_out regfile_RD2_3_out regfile_RD2_4_out regfile_RD2_5_out regfile_RD2_6_out regfile_RD2_7_out
++ mem_RD_0 mem_RD_1 mem_RD_2 mem_RD_3 mem_RD_4 mem_RD_5 mem_RD_6 mem_RD_7
++ vdd vss
++ sram
+
+Xmem_reg vdd vss clk clk_bar reset_n vss 
++ mem_RD_7 mem_RD_6 mem_RD_5 mem_RD_4 mem_RD_3 mem_RD_2 mem_RD_1 mem_RD_0
++ mem_RD_7_out mem_RD_6_out mem_RD_5_out mem_RD_4_out mem_RD_3_out mem_RD_2_out mem_RD_1_out mem_RD_0_out
++ reg_array_8
+
+
+* Mem2reg 为 1 选择 mem_RD_0_out； 为0 选择 alu_res_0
+XMem2reg MemtoReg 
++ mem_RD_0_out alu_res_0
++ mem_RD_1_out alu_res_1
++ mem_RD_2_out alu_res_2
++ mem_RD_3_out alu_res_3
++ mem_RD_4_out alu_res_4
++ mem_RD_5_out alu_res_5
++ mem_RD_6_out alu_res_6
++ mem_RD_7_out alu_res_7
++ vdd vss 
++ regfile_WD3_0 regfile_WD3_1 regfile_WD3_2 regfile_WD3_3 regfile_WD3_4 regfile_WD3_5 regfile_WD3_6 regfile_WD3_7 
++ alu_2mux1
+
+.ends
+
+
+
+
+
+
+
+
+
+
+.TRAN 1e-9 40e-9 START=0.0
+
+.END
+
+
+
+
+
+
+
